@@ -1,0 +1,37 @@
+{
+  "cards": [
+    {"id":"gold-skill-01","mode":"gold","type":"skill","name":"道具大师","desc":"你的每张装备卡使用次数 +1","uses":0,"imageUrl":"🛠️","rarity":"epic"},
+    {"id":"gold-skill-02","mode":"gold","type":"skill","name":"锦囊妙计","desc":"装备卡使用后有概率恢复 1 次使用机会","uses":0,"imageUrl":"📜","rarity":"rare"},
+    {"id":"gold-skill-03","mode":"gold","type":"skill","name":"顺手牵羊","desc":"装备卡使用后可额外摸一张牌","uses":0,"imageUrl":"🤏","rarity":"common"},
+    {"id":"gold-skill-04","mode":"gold","type":"skill","name":"妙手回春","desc":"装备卡效果未达成时，可立即重试一次","uses":0,"imageUrl":"🩹","rarity":"rare"},
+    {"id":"gold-skill-05","mode":"gold","type":"skill","name":"装备强化","desc":"装备卡效果数值翻倍","uses":0,"imageUrl":"⚡","rarity":"rare"},
+    {"id":"gold-skill-06","mode":"gold","type":"skill","name":"借力打力","desc":"看到对手用装备时，你可立即用同种一次","uses":0,"imageUrl":"🥷","rarity":"epic"},
+
+    {"id":"gold-equip-01","mode":"gold","type":"equipment","name":"再摸一张","desc":"多抽一张牌","uses":3,"imageUrl":"🎴","rarity":"common"},
+    {"id":"gold-equip-02","mode":"gold","type":"equipment","name":"换牌","desc":"弃掉一张牌，重新抽一张","uses":3,"imageUrl":"🔄","rarity":"common"},
+    {"id":"gold-equip-03","mode":"gold","type":"equipment","name":"偷看","desc":"看对手一张暗牌","uses":2,"imageUrl":"👁️","rarity":"rare"},
+    {"id":"gold-equip-04","mode":"gold","type":"equipment","name":"标记","desc":"标记一张牌的位置（之后可看）","uses":2,"imageUrl":"📍","rarity":"common"},
+    {"id":"gold-equip-05","mode":"gold","type":"equipment","name":"跳过","desc":"跳过你的本轮出牌","uses":1,"imageUrl":"⏭️","rarity":"rare"},
+    {"id":"gold-equip-06","mode":"gold","type":"equipment","name":"复制","desc":"复制对手刚用的装备卡效果","uses":1,"imageUrl":"📋","rarity":"epic"},
+    {"id":"gold-equip-07","mode":"gold","type":"equipment","name":"提示","desc":"系统提示你哪张牌最该出","uses":2,"imageUrl":"💡","rarity":"common"},
+    {"id":"gold-equip-08","mode":"gold","type":"equipment","name":"重抽","desc":"重新洗牌并重抽你的手牌","uses":1,"imageUrl":"🎲","rarity":"rare"},
+    {"id":"gold-equip-09","mode":"gold","type":"equipment","name":"透视","desc":"看对手所有暗牌","uses":1,"imageUrl":"🔮","rarity":"epic"},
+
+    {"id":"rainbow-skill-01","mode":"rainbow","type":"skill","name":"卓尔不群","desc":"每张牌不一样即可胡牌","uses":0,"imageUrl":"🌈","rarity":"epic"},
+    {"id":"rainbow-skill-02","mode":"rainbow","type":"skill","name":"大师","desc":"你的每张装备卡使用次数 +2","uses":0,"imageUrl":"👑","rarity":"epic"},
+    {"id":"rainbow-skill-03","mode":"rainbow","type":"skill","name":"鸿运当头","desc":"装备卡使用必生效（无视对手技能）","uses":0,"imageUrl":"🍀","rarity":"rare"},
+    {"id":"rainbow-skill-04","mode":"rainbow","type":"skill","name":"一夜暴富","desc":"每用一次装备卡本局 +5 分","uses":0,"imageUrl":"💰","rarity":"epic"},
+    {"id":"rainbow-skill-05","mode":"rainbow","type":"skill","name":"逆转乾坤","desc":"本局最后阶段可强制翻盘（一次）","uses":0,"imageUrl":"🌀","rarity":"epic"},
+    {"id":"rainbow-skill-06","mode":"rainbow","type":"skill","name":"神机妙算","desc":"你的装备卡不消耗次数","uses":0,"imageUrl":"🧠","rarity":"epic"},
+
+    {"id":"rainbow-equip-01","mode":"rainbow","type":"equipment","name":"改命","desc":"重新洗所有人的牌","uses":1,"imageUrl":"⏰","rarity":"epic"},
+    {"id":"rainbow-equip-02","mode":"rainbow","type":"equipment","name":"全知","desc":"看所有人的全部手牌","uses":1,"imageUrl":"👁️‍🗨️","rarity":"epic"},
+    {"id":"rainbow-equip-03","mode":"rainbow","type":"equipment","name":"锁定","desc":"让一个对手跳过本轮","uses":1,"imageUrl":"🔒","rarity":"rare"},
+    {"id":"rainbow-equip-04","mode":"rainbow","type":"equipment","name":"召唤","desc":"从牌墙选任意一张牌加入手牌","uses":1,"imageUrl":"✨","rarity":"epic"},
+    {"id":"rainbow-equip-05","mode":"rainbow","type":"equipment","name":"时光倒流","desc":"撤回本轮已出的所有操作","uses":1,"imageUrl":"⌛","rarity":"epic"},
+    {"id":"rainbow-equip-06","mode":"rainbow","type":"equipment","name":"命运之轮","desc":"随机获得一张稀有牌","uses":1,"imageUrl":"🎡","rarity":"rare"},
+    {"id":"rainbow-equip-07","mode":"rainbow","type":"equipment","name":"换位","desc":"和一个对手交换一张手牌","uses":1,"imageUrl":"🔀","rarity":"rare"},
+    {"id":"rainbow-equip-08","mode":"rainbow","type":"equipment","name":"加倍","desc":"本局你的得分翻倍","uses":1,"imageUrl":"✖️","rarity":"rare"},
+    {"id":"rainbow-equip-09","mode":"rainbow","type":"equipment","name":"终结","desc":"立刻宣布胡牌（无视牌型）","uses":1,"imageUrl":"💥","rarity":"epic"}
+  ]
+}
