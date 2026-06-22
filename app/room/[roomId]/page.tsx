@@ -230,11 +230,64 @@ function RoomPageInner() {
     );
   }
 
+  // 扫码进入的人 me 是 null，必须先渲染 join 弹窗
+  // 否则会被「加载中」页面挡住，弹窗永远出不来
+  const joinDialog = joinOpen ? (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+        <h3 className="mb-2 text-lg font-bold">🀄 加入房间</h3>
+        <p className="mb-4 text-sm text-gray-500">
+          房间码：
+          <span className="font-mono font-bold text-red-600">{roomId}</span>
+        </p>
+        <input
+          type="text"
+          value={joinNick}
+          onChange={(e) => setJoinNick(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !joinLoading) doJoin();
+          }}
+          placeholder="输入你的昵称"
+          maxLength={32}
+          autoFocus
+          className="mb-3 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+        />
+        {joinErr && <p className="mb-3 text-xs text-red-600">{joinErr}</p>}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setJoinOpen(false);
+              setJoinErr('');
+              setJoinNick('');
+              window.history.replaceState({}, '', `/room/${roomId}`);
+            }}
+            disabled={joinLoading}
+            className="flex-1"
+          >
+            取消
+          </Button>
+          <Button
+            variant="primary"
+            onClick={doJoin}
+            disabled={joinLoading || !joinNick.trim()}
+            className="flex-1"
+          >
+            {joinLoading ? '加入中…' : '加入'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  ) : null;
+
   if (!data || !me) {
     return (
-      <div className="mx-auto max-w-2xl p-12 text-center text-gray-500">
-        加载中...
-      </div>
+      <>
+        <div className="mx-auto max-w-2xl p-12 text-center text-gray-500">
+          {joinFlag ? '准备加入房间…' : '加载中…'}
+        </div>
+        {joinDialog}
+      </>
     );
   }
 
@@ -468,58 +521,8 @@ function RoomPageInner() {
         </div>
       )}
 
-      {/* 扫码进入弹窗 */}
-      {joinOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h3 className="mb-2 text-lg font-bold">🀄 加入房间</h3>
-            <p className="mb-4 text-sm text-gray-500">
-              房间码：
-              <span className="font-mono font-bold text-red-600">
-                {roomId}
-              </span>
-            </p>
-            <input
-              type="text"
-              value={joinNick}
-              onChange={(e) => setJoinNick(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !joinLoading) doJoin();
-              }}
-              placeholder="输入你的昵称"
-              maxLength={32}
-              autoFocus
-              className="mb-3 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-            />
-            {joinErr && (
-              <p className="mb-3 text-xs text-red-600">{joinErr}</p>
-            )}
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setJoinOpen(false);
-                  setJoinErr('');
-                  setJoinNick('');
-                  window.history.replaceState({}, '', `/room/${roomId}`);
-                }}
-                disabled={joinLoading}
-                className="flex-1"
-              >
-                取消
-              </Button>
-              <Button
-                variant="primary"
-                onClick={doJoin}
-                disabled={joinLoading || !joinNick.trim()}
-                className="flex-1"
-              >
-                {joinLoading ? '加入中…' : '加入'}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 扫码进入弹窗（变量定义在前面 loading return 之前，loading 时也能渲染） */}
+      {joinDialog}
     </div>
   );
 }
