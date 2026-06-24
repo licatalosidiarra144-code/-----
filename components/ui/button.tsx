@@ -19,13 +19,13 @@ export function Button({
     'inline-flex items-center justify-center font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed';
   const variants = {
     primary:
-      'bg-gradient-to-r from-red-600 to-orange-500 text-white hover:from-red-700 hover:to-orange-600 shadow-md hover:shadow-lg',
+      'bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-500 hover:to-rose-500 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50',
     secondary:
-      'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100',
+      'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm',
     ghost:
-      'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+      'text-white/80 hover:bg-white/10 hover:text-white',
     outline:
-      'border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300',
+      'border border-white/20 bg-white/5 text-white/90 hover:bg-white/10 hover:border-white/30 backdrop-blur-sm',
   };
   const sizes = {
     sm: 'px-3 py-1.5 text-sm',

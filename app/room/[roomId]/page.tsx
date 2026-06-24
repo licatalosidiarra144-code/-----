@@ -35,6 +35,14 @@ interface Me {
   isOwner: boolean;
 }
 
+// 4 个槽位的渐变色（按 index 取：红橙 / 琥珀 / 青绿 / 紫粉）
+const PLAYER_GRADIENTS = [
+  'from-rose-500 via-red-500 to-orange-500',
+  'from-amber-500 via-orange-500 to-yellow-500',
+  'from-emerald-500 via-teal-500 to-cyan-500',
+  'from-violet-500 via-purple-500 to-fuchsia-500',
+] as const;
+
 export default function RoomPage() {
   return (
     <Suspense
@@ -233,12 +241,12 @@ function RoomPageInner() {
   // 扫码进入的人 me 是 null，必须先渲染 join 弹窗
   // 否则会被「加载中」页面挡住，弹窗永远出不来
   const joinDialog = joinOpen ? (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-        <h3 className="mb-2 text-lg font-bold">🀄 加入房间</h3>
-        <p className="mb-4 text-sm text-gray-500">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-xl">
+        <h3 className="mb-2 text-lg font-bold text-white">🀄 加入房间</h3>
+        <p className="mb-4 text-sm text-white/50">
           房间码：
-          <span className="font-mono font-bold text-red-600">{roomId}</span>
+          <span className="font-mono font-bold text-pink-400">{roomId}</span>
         </p>
         <input
           type="text"
@@ -250,9 +258,9 @@ function RoomPageInner() {
           placeholder="输入你的昵称"
           maxLength={32}
           autoFocus
-          className="mb-3 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+          className="mb-3 w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/30"
         />
-        {joinErr && <p className="mb-3 text-xs text-red-600">{joinErr}</p>}
+        {joinErr && <p className="mb-3 text-xs text-pink-400">{joinErr}</p>}
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -297,20 +305,28 @@ function RoomPageInner() {
   const myEquipmentSelectedIds = myDraw?.equipment?.selectedIds || [];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <div className="relative mx-auto min-h-screen max-w-5xl px-4 py-8">
+      {/* ===== 暗色霓虹背景 ===== */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950" />
+      <div className="pointer-events-none fixed top-1/4 left-1/4 -z-10 h-96 w-96 rounded-full bg-purple-600/30 blur-3xl" />
+      <div className="pointer-events-none fixed bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-blue-600/30 blur-3xl" />
+      <div className="pointer-events-none fixed top-1/2 left-1/2 -z-10 h-96 w-96 rounded-full bg-pink-600/20 blur-3xl" />
+      {/* 麻将桌纹理（深绿暗光） */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.08),_transparent_60%)]" />
+
       {/* 顶部信息条 */}
-      <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm text-gray-500">房间码</div>
+            <div className="text-sm text-white/50">房间码</div>
             <div className="flex items-baseline gap-2">
-              <div className="font-mono text-2xl font-bold text-red-600">
+              <div className="font-mono text-2xl font-bold text-white drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
                 {data.room.code}
               </div>
               {data.room.status === 'waiting' && data.players.length < 4 && (
                 <button
                   onClick={() => setInviteOpen(true)}
-                  className="rounded-md border border-gray-300 px-2 py-0.5 text-xs text-gray-600 hover:border-red-500 hover:text-red-600"
+                  className="rounded-md border border-white/20 bg-white/5 px-2 py-0.5 text-xs text-white/80 backdrop-blur-sm hover:border-pink-400 hover:text-pink-300"
                 >
                   📱 邀请
                 </button>
@@ -318,82 +334,108 @@ function RoomPageInner() {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-gray-500">状态</div>
-            <div className="text-lg font-semibold">{statusLabel(data.room.status)}</div>
+            <div className="text-sm text-white/50">状态</div>
+            <div className="text-lg font-semibold text-white">{statusLabel(data.room.status)}</div>
             {data.room.round > 0 && (
-              <div className="text-xs text-gray-500">第 {data.room.round} 局</div>
+              <div className="text-xs text-white/40">第 {data.room.round} 局</div>
             )}
           </div>
           <div className="text-right">
-            <div className="text-sm text-gray-500">人数</div>
-            <div className="text-lg font-semibold">
+            <div className="text-sm text-white/50">人数</div>
+            <div className="text-lg font-semibold text-white">
               {data.players.length} / 4
             </div>
           </div>
         </div>
         {data.room.currentMode && (
-          <div className="mt-3 text-center text-lg font-bold">
+          <div className="mt-3 text-center text-lg font-bold text-white drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]">
             {data.room.currentMode === 'gold' ? '🎴 金局（道具赛）' : '🌈 彩局（OP 大招局）'}
           </div>
         )}
       </div>
 
       {/* 玩家列表 */}
-      <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div className="mb-3 text-sm font-semibold text-gray-700">玩家</div>
+      <div className="mb-6">
+        <div className="mb-3 px-1 text-sm font-semibold text-white/80">🪑 玩家</div>
         <div className="grid grid-cols-4 gap-3">
-          {data.players.map((p) => {
+          {data.players.map((p, idx) => {
             const pDraw = data.draws[p.id];
             const skillDone = pDraw?.skill?.selectedId;
             const equipDone = pDraw?.equipment?.selectedIds.length === 3;
+            const grad = PLAYER_GRADIENTS[idx % PLAYER_GRADIENTS.length];
             return (
               <button
                 key={p.id}
                 onClick={() => setPlayerView(p)}
-                className="flex flex-col items-center rounded-lg border border-gray-200 p-2 hover:border-red-500"
+                className={`group relative flex flex-col items-center overflow-hidden rounded-2xl bg-gradient-to-br ${grad} p-4 shadow-md transition-all hover:scale-105 hover:shadow-xl`}
               >
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-orange-400 text-lg text-white">
+                {/* 玻璃态叠加 + 高光 */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/10" />
+                <div className="pointer-events-none absolute -top-8 -right-8 h-20 w-20 rounded-full bg-white/20 blur-2xl" />
+
+                {/* 头像 */}
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/40 bg-white/25 text-xl font-bold text-white shadow-inner backdrop-blur-sm">
                   {p.nickname[0]}
                   {p.isOwner && (
-                    <span className="absolute -right-1 -top-1 text-sm">👑</span>
+                    <span className="absolute -right-1 -top-1 text-base drop-shadow">
+                      👑
+                    </span>
                   )}
                 </div>
-                <div className="mt-1 text-xs font-medium">{p.nickname}</div>
-                <div className="mt-0.5 text-xs">
-                  {data.room.status === 'waiting' ? (
-                    <span className="text-gray-400">等待中</span>
-                  ) : skillDone && equipDone ? (
-                    <span className="text-green-600">已就绪 ✓</span>
-                  ) : skillDone ? (
-                    <span className="text-blue-600">等装备</span>
-                  ) : (
-                    <span className="text-orange-600">选技能中</span>
-                  )}
+
+                {/* 昵称 */}
+                <div className="relative mt-2 text-sm font-semibold text-white drop-shadow">
+                  {p.nickname}
+                </div>
+
+                {/* 状态 chip */}
+                <div className="relative mt-1.5">
+                  <span className="inline-block rounded-full bg-white/30 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+                    {data.room.status === 'waiting'
+                      ? '等待中'
+                      : skillDone && equipDone
+                      ? '已就绪 ✓'
+                      : skillDone
+                      ? '等装备'
+                      : '选技能中'}
+                  </span>
                 </div>
               </button>
             );
           })}
-          {Array.from({ length: 4 - data.players.length }).map((_, i) => (
-            <div
-              key={`empty-${i}`}
-              className="flex flex-col items-center rounded-lg border-2 border-dashed border-gray-200 p-2"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                ?
+          {Array.from({ length: 4 - data.players.length }).map((_, i) => {
+            const slotIdx = data.players.length + i;
+            const grad = PLAYER_GRADIENTS[slotIdx % PLAYER_GRADIENTS.length];
+            return (
+              <div
+                key={`empty-${i}`}
+                className={`relative flex flex-col items-center overflow-hidden rounded-2xl border-2 border-dashed border-white/60 bg-gradient-to-br ${grad} p-4 opacity-50`}
+              >
+                <div className="pointer-events-none absolute inset-0 bg-white/40" />
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-dashed border-white/60 bg-white/20 text-xl font-bold text-white/70 backdrop-blur-sm">
+                  +
+                </div>
+                <div className="relative mt-2 text-sm font-medium text-white/80">
+                  空位
+                </div>
+                <div className="relative mt-1.5">
+                  <span className="inline-block rounded-full bg-white/30 px-2 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm">
+                    等待加入
+                  </span>
+                </div>
               </div>
-              <div className="mt-1 text-xs text-gray-400">空位</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* 主内容区 */}
       {data.room.status === 'waiting' && (
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
           {me.isOwner ? (
             <>
-              <p className="mb-2 text-lg">等齐 4 人后，房主点这里开始</p>
-              <p className="mb-6 text-sm text-gray-500">
+              <p className="mb-2 text-lg font-semibold text-white">等齐 4 人后，房主点这里开始</p>
+              <p className="mb-6 text-sm text-white/50">
                 系统会随机选"金局"或"彩局"
               </p>
               <Button
@@ -405,7 +447,7 @@ function RoomPageInner() {
               </Button>
             </>
           ) : (
-            <p className="text-lg text-gray-500">等房主开始游戏...</p>
+            <p className="text-lg text-white/60">等房主开始游戏...</p>
           )}
         </div>
       )}
@@ -451,21 +493,21 @@ function RoomPageInner() {
       {/* 玩家详情弹窗 */}
       {playerView && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
           onClick={() => setPlayerView(null)}
         >
           <div
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-bold">
+              <h3 className="text-lg font-bold text-white">
                 {playerView.nickname} 的卡
                 {playerView.isOwner && ' 👑'}
               </h3>
               <button
                 onClick={() => setPlayerView(null)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-white/40 hover:text-white"
               >
                 ✕
               </button>
@@ -484,26 +526,26 @@ function RoomPageInner() {
       {/* 邀请弹窗（显示二维码） */}
       {inviteOpen && origin && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
           onClick={() => setInviteOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl"
+            className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/80 p-6 text-center shadow-2xl backdrop-blur-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="text-lg font-bold">📱 扫码加入</h3>
+              <h3 className="text-lg font-bold text-white">📱 扫码加入</h3>
               <button
                 onClick={() => setInviteOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-white/40 hover:text-white"
               >
                 ✕
               </button>
             </div>
-            <p className="mb-4 text-sm text-gray-500">
-              让好友用微信 / 浏览器扫这个码进房间
+            <p className="mb-4 text-sm text-white/50">
+              让好友用浏览器扫这个码进房间
             </p>
-            <div className="flex justify-center rounded-xl bg-gray-50 p-4">
+            <div className="flex justify-center rounded-xl border border-white/10 bg-white p-4">
               <QRCodeSVG
                 value={`${origin}/room/${roomId}?join=1`}
                 size={200}
@@ -511,8 +553,8 @@ function RoomPageInner() {
                 includeMargin={false}
               />
             </div>
-            <div className="mt-4 rounded-lg bg-gray-100 px-3 py-2 text-xs text-gray-600">
-              <div className="mb-1 text-gray-400">或复制链接发给好友：</div>
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70">
+              <div className="mb-1 text-white/40">或复制链接发给好友：</div>
               <div className="break-all font-mono text-left">
                 {`${origin}/room/${roomId}?join=1`}
               </div>
@@ -556,23 +598,23 @@ function SkillPickPhase({
   if (selectedId) {
     const card = cards.find((c) => c.id === selectedId);
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-        <p className="mb-2 text-lg">✅ 你已选：</p>
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
+        <p className="mb-2 text-lg font-semibold text-white">✅ 你已选：</p>
         {card && (
           <div className="flex justify-center">
             <CardTile card={card} selected disabled />
           </div>
         )}
-        <p className="mt-4 text-sm text-gray-500">
+        <p className="mt-4 text-sm text-white/50">
           {allPlayersReady ? '所有人选完了，进入下一环节...' : '等其他人选完...'}
         </p>
       </div>
     );
   }
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-2 text-center text-xl font-bold">🎯 选 1 张技能卡（4 选 1）</h2>
-      <p className="mb-6 text-center text-sm text-gray-500">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
+      <h2 className="mb-2 text-center text-xl font-bold text-white">🎯 选 1 张技能卡（4 选 1）</h2>
+      <p className="mb-6 text-center text-sm text-white/50">
         技能卡是永久被动效果，跟你的装备卡配合使用
       </p>
       <div className="flex flex-wrap justify-center gap-4">
@@ -616,9 +658,9 @@ function EquipmentPickPhase({
 
   if (selectedIds.length === 3) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-        <p className="mb-2 text-lg">✅ 你已选 3 张装备卡</p>
-        <p className="mt-4 text-sm text-gray-500">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
+        <p className="mb-2 text-lg font-semibold text-white">✅ 你已选 3 张装备卡</p>
+        <p className="mt-4 text-sm text-white/50">
           {allPlayersReady ? '所有人选完了，进入游戏...' : '等其他人选完...'}
         </p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -632,9 +674,9 @@ function EquipmentPickPhase({
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-2 text-center text-xl font-bold">⚔️ 选 3 张装备卡（5 选 3）</h2>
-      <p className="mb-6 text-center text-sm text-gray-500">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
+      <h2 className="mb-2 text-center text-xl font-bold text-white">⚔️ 选 3 张装备卡（5 选 3）</h2>
+      <p className="mb-6 text-center text-sm text-white/50">
         装备卡有使用次数限制，用完变灰
       </p>
       <div className="mb-6 flex flex-wrap justify-center gap-4">
@@ -649,8 +691,8 @@ function EquipmentPickPhase({
         ))}
       </div>
       <div className="text-center">
-        <p className="mb-3 text-sm">
-          已选 <span className="font-bold text-red-600">{picked.length}</span> / 3
+        <p className="mb-3 text-sm text-white/80">
+          已选 <span className="font-bold text-pink-400">{picked.length}</span> / 3
         </p>
         <Button
           onClick={() => onPick(picked)}
@@ -682,14 +724,14 @@ function PlayingPhase({
 }) {
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-2 text-center text-xl font-bold">🀄 你的卡组</h2>
-        <p className="mb-6 text-center text-sm text-gray-500">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
+        <h2 className="mb-2 text-center text-xl font-bold text-white">🀄 你的卡组</h2>
+        <p className="mb-6 text-center text-sm text-white/50">
           点装备卡的"使用"按钮 → 剩余次数 -1（自己 + 其他人都能看到变灰）
         </p>
 
         <div className="mb-6">
-          <h3 className="mb-3 text-sm font-semibold text-gray-700">技能卡（永久）</h3>
+          <h3 className="mb-3 text-sm font-semibold text-white/80">技能卡（永久）</h3>
           <div className="flex flex-wrap justify-center gap-3">
             {mySelectedCards
               .filter((c) => c.type === 'skill')
@@ -700,7 +742,7 @@ function PlayingPhase({
         </div>
 
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-gray-700">装备卡（可使用）</h3>
+          <h3 className="mb-3 text-sm font-semibold text-white/80">装备卡（可使用）</h3>
           <div className="flex flex-wrap justify-center gap-3">
             {mySelectedCards
               .filter((c) => c.type === 'equipment')
@@ -712,7 +754,7 @@ function PlayingPhase({
                     <button
                       onClick={() => onUseCard(c.id)}
                       disabled={loading || remaining <= 0}
-                      className="mt-2 rounded-md bg-red-600 px-4 py-1 text-xs text-white hover:bg-red-700 disabled:opacity-50"
+                      className="mt-2 rounded-md bg-gradient-to-r from-pink-600 to-rose-600 px-4 py-1 text-xs font-semibold text-white shadow-lg shadow-pink-500/30 hover:from-pink-500 hover:to-rose-500 disabled:opacity-50"
                     >
                       使用（剩 {remaining}/{c.uses}）
                     </button>
@@ -724,8 +766,8 @@ function PlayingPhase({
       </div>
 
       {isOwner && (
-        <div className="rounded-2xl border border-yellow-300 bg-yellow-50 p-4 text-center">
-          <p className="mb-2 text-sm text-yellow-800">这一局麻将打完了？</p>
+        <div className="rounded-2xl border border-yellow-400/40 bg-yellow-500/10 p-4 text-center shadow-lg backdrop-blur-xl">
+          <p className="mb-2 text-sm text-yellow-200">这一局麻将打完了？</p>
           <Button onClick={onNextRound} disabled={loading} variant="outline">
             🎲 开下一局
           </Button>
