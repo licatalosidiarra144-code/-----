@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, cardDraws } from '@/lib/db/helpers';
 import { drawCards, getCardsByMode, CardType } from '@/lib/cards';
+import { getPlayerSession } from '@/lib/session';
 
 export async function POST(
   request: NextRequest,
@@ -10,14 +11,19 @@ export async function POST(
 ) {
   try {
     const { roomId: roomCode } = await params;
-    const { ownerId } = await request.json();
+
+    // 身份校验：从 cookie 读，且必须是本房间的房主
+    const session = await getPlayerSession();
+    if (!session || session.roomCode !== roomCode) {
+      return NextResponse.json({ error: '请先加入房间' }, { status: 401 });
+    }
+    if (!session.isOwner) {
+      return NextResponse.json({ error: '只有房主能开始' }, { status: 403 });
+    }
 
     const room = await rooms.findByCode(roomCode);
     if (!room) {
       return NextResponse.json({ error: '房间不存在' }, { status: 404 });
-    }
-    if (room.ownerId !== ownerId) {
-      return NextResponse.json({ error: '只有房主能开始' }, { status: 403 });
     }
     if (room.status !== 'waiting') {
       return NextResponse.json({ error: '游戏已开始' }, { status: 400 });

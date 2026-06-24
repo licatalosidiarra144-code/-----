@@ -1,9 +1,10 @@
-// GET /api/admin/cards — 列出所有卡
+// GET  /api/admin/cards — 列出所有卡
 // POST /api/admin/cards — 新增卡
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { checkAdminPassword } from '@/lib/admin-auth';
 
 const CARDS_FILE = path.join(process.cwd(), 'data', 'cards.json');
 
@@ -25,7 +26,10 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  if (!checkAdminPassword(req)) {
+    return NextResponse.json({ error: '需要管理员密码' }, { status: 401 });
+  }
   try {
     const newCard = await req.json();
     // 必填字段校验

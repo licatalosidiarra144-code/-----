@@ -31,11 +31,7 @@ export default function HomePage() {
         setError(data.error || '创建失败');
         return;
       }
-      // 存到 sessionStorage 方便后续页面用
-      sessionStorage.setItem(
-        `player_${data.room.code}`,
-        JSON.stringify(data.player)
-      );
+      // 服务端会通过 Set-Cookie 写入房主身份，不用再存 sessionStorage
       router.push(`/room/${data.room.code}`);
     } catch {
       setError('网络错误');
@@ -56,7 +52,8 @@ export default function HomePage() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`/api/room/${roomCode.toUpperCase().trim()}/join`, {
+      const code = roomCode.toUpperCase().trim();
+      const res = await fetch(`/api/room/${code}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nickname: nickname.trim() }),
@@ -66,11 +63,8 @@ export default function HomePage() {
         setError(data.error || '加入失败');
         return;
       }
-      sessionStorage.setItem(
-        `player_${roomCode.toUpperCase().trim()}`,
-        JSON.stringify(data.player)
-      );
-      router.push(`/room/${roomCode.toUpperCase().trim()}`);
+      // 服务端 Set-Cookie
+      router.push(`/room/${code}`);
     } catch {
       setError('网络错误');
     } finally {

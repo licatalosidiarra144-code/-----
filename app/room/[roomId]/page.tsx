@@ -26,6 +26,7 @@ interface RoomData {
   draws: Record<number, { skill?: { cards: Card[]; selectedId?: string }; equipment?: { cards: Card[]; selectedIds: string[] } }>;
   selectedCards: Record<number, Card[]>;
   cardUses: Record<number, Record<string, number>>;
+  me: { id: number; nickname: string; isOwner: boolean } | null;
 }
 
 interface Me {
@@ -74,12 +75,6 @@ function RoomPageInner() {
   const [joinErr, setJoinErr] = useState('');
   const [joinLoading, setJoinLoading] = useState(false);
 
-  // 加载我的身份
-  useEffect(() => {
-    const stored = sessionStorage.getItem(`player_${roomId}`);
-    if (stored) setMe(JSON.parse(stored));
-  }, [roomId]);
-
   // 扫码进入（URL 带 ?join=1 且我还没加入）→ 弹加入框
   useEffect(() => {
     if (joinFlag && !me) setJoinOpen(true);
@@ -108,7 +103,7 @@ function RoomPageInner() {
         setJoinErr(d.error || '加入失败');
         return;
       }
-      sessionStorage.setItem(`player_${roomId}`, JSON.stringify(d.player));
+      // 服务端通过 Set-Cookie 写入玩家身份，me 会被下次轮询带回来
       setMe(d.player);
       setJoinOpen(false);
       setJoinNick('');
@@ -121,15 +116,19 @@ function RoomPageInner() {
     }
   }
 
-  // 轮询房间状态（每 1.5 秒）
+  // 轮询房间状态（每 1.5 秒）；同时把服务端认定的 me 也带回
   useEffect(() => {
     if (!roomId) return;
     function fetchRoom() {
       fetch(`/api/room/${roomId}`)
         .then((r) => r.json())
         .then((d) => {
-          if (d.success) setData(d);
-          else setError(d.error || '房间加载失败');
+          if (d.success) {
+            setData(d);
+            if (d.me) setMe(d.me);
+          } else {
+            setError(d.error || '房间加载失败');
+          }
         })
         .catch(() => {});
     }
@@ -144,10 +143,11 @@ function RoomPageInner() {
     if (!me?.isOwner) return;
     setActionLoading(true);
     try {
+      // 不用再传 ownerId，cookie 已经标识了房主
       const res = await fetch(`/api/room/${roomId}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ownerId: data?.room.ownerId }),
+        body: JSON.stringify({}),
       });
       const d = await res.json();
       if (!res.ok) alert(d.error);
@@ -163,7 +163,7 @@ function RoomPageInner() {
       const res = await fetch(`/api/room/${roomId}/skill-pick`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId: me.id, cardId }),
+        body: JSON.stringify({ cardId }),
       });
       const d = await res.json();
       if (!res.ok) alert(d.error);
@@ -179,7 +179,7 @@ function RoomPageInner() {
       const res = await fetch(`/api/room/${roomId}/equipment-pick`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId: me.id, cardIds }),
+        body: JSON.stringify({ cardIds }),
       });
       const d = await res.json();
       if (!res.ok) alert(d.error);
@@ -196,7 +196,7 @@ function RoomPageInner() {
       const res = await fetch(`/api/room/${roomId}/use-card`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId: me.id, cardId }),
+        body: JSON.stringify({ cardId }),
       });
       const d = await res.json();
       if (!res.ok) alert(d.error);
@@ -212,7 +212,7 @@ function RoomPageInner() {
       const res = await fetch(`/api/room/${roomId}/next-round`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ownerId: data?.room.ownerId }),
+        body: JSON.stringify({}),
       });
       const d = await res.json();
       if (!res.ok) alert(d.error);

@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
 import { generateUniqueRoomCode } from '@/lib/room/code';
 import { rooms, roomPlayers } from '@/lib/db/helpers';
+import { setPlayerSession } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +34,14 @@ export async function POST(request: NextRequest) {
       roomId: room.id,
       nickname: nickname.trim(),
       isOwner: 1,
+    });
+
+    // 写入会话 cookie（房主身份）
+    await setPlayerSession({
+      roomCode: room.code,
+      playerId: owner!.id,
+      nickname: owner!.nickname,
+      isOwner: true,
     });
 
     return NextResponse.json({

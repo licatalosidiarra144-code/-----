@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers } from '@/lib/db/helpers';
+import { setPlayerSession } from '@/lib/session';
 
 export async function POST(
   request: NextRequest,
@@ -36,6 +37,14 @@ export async function POST(
       roomId: room.id,
       nickname: nickname.trim(),
       isOwner: 0,
+    });
+
+    // 写入会话 cookie
+    await setPlayerSession({
+      roomCode: room.code,
+      playerId: player!.id,
+      nickname: player!.nickname,
+      isOwner: false,
     });
 
     return NextResponse.json({

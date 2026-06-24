@@ -1,8 +1,9 @@
-// 获取房间状态（含所有玩家、当前局信息）
+// 获取房间状态（含所有玩家、当前局信息、当前玩家身份）
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, playerCards, cardDraws } from '@/lib/db/helpers';
 import { getCard } from '@/lib/cards';
+import { getPlayerSession } from '@/lib/session';
 
 export async function GET(
   request: NextRequest,
@@ -21,6 +22,16 @@ export async function GET(
     if (!room) {
       return NextResponse.json({ error: '房间不存在' }, { status: 404 });
     }
+
+    // 从 cookie 取当前玩家身份
+    const session = await getPlayerSession();
+    const me = session && session.roomCode === room.code
+      ? {
+          id: session.playerId,
+          nickname: session.nickname,
+          isOwner: session.isOwner,
+        }
+      : null;
 
     const players = await roomPlayers.listByRoom(room.id);
     const playerCount = players.length;
@@ -89,6 +100,7 @@ export async function GET(
       draws: playerDrawsMap,
       selectedCards: playerCardsMap,
       cardUses: playerCardUsesMap,
+      me, // 新增：从 cookie 读到的「我」
     });
   } catch (e) {
     console.error('Get room error:', e);

@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/utils';
 
-// ============================================
-// 卡牌管理后台：增删改 30 张卡
+// ============================================// 卡牌管理后台：增删改 30 张卡
 // 数据存在 data/cards.json
+// 访问需要 ADMIN_PASSWORD（存在 localStorage）
 // ============================================
 
 type CardType = 'skill' | 'equipment';
@@ -36,23 +36,58 @@ const EMPTY_CARD: Card = {
   rarity: 'common',
 };
 
+const PASS_KEY = 'mj_admin_pass';
+
 export default function AdminCardsPage() {
+  const [pass, setPass] = useState<string | null>(null);
+  const [passInput, setPassInput] = useState('');
+  const [passErr, setPassErr] = useState('');
+
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Card | null>(null);
   const [isNew, setIsNew] = useState(false);
 
-  async function load() {
+  // 进入页面：先看 localStorage 有没有记住密码
+  useEffect(() => {
+    const saved = localStorage.getItem(PASS_KEY);
+    if (saved) setPass(saved);
+  }, []);
+
+  async function load(p: string) {
     setLoading(true);
     const res = await fetch('/api/admin/cards', { cache: 'no-store' });
     const data = await res.json();
     setCards(data.cards || []);
     setLoading(false);
+    // pass 仅用于后面写操作；GET 读取不需要密码（保留随时看卡的能力）
+    // 但为了减少重复请求，这里 GET 也带上 pass 也行
+    void p;
   }
 
   useEffect(() => {
-    load();
-  }, []);
+    if (pass) load(pass);
+  }, [pass]);
+
+  async function tryPass() {
+    setPassErr('');
+    // 简单试一下：用这个密码 POST 一张假卡会失败但能验证密码对不对
+    // 用一个特殊的探测请求：直接调 POST 校验会污染数据，不行
+    // 改成：直接信任输入并保存，让后续真正写操作触发 401 再回退
+    const p = passInput.trim();
+    if (!p) {
+      setPassErr('请输入密码');
+      return;
+    }
+    localStorage.setItem(PASS_KEY, p);
+    setPass(p);
+  }
+
+  function logout() {
+    localStorage.removeItem(PASS_KEY);
+    setPass(null);
+    setPassInput('');
+  }
 
   async function save(card: Card) {
     const url = isNew
@@ -61,31 +96,80 @@ export default function AdminCardsPage() {
     const method = isNew ? 'POST' : 'PUT';
     const res = await fetch(url, {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Password': pass || '',
+      },
       body: JSON.stringify(card),
     });
     const data = await res.json();
+    if (res.status === 401) {
+      alert('密码错误或已失效，请重新输入');
+      logout();
+      return;
+    }
     if (!res.ok) {
       alert(`保存失败：${data.error || '未知错误'}`);
       return;
     }
     setEditing(null);
-    load();
+    load(pass || '');
   }
 
   async function remove(card: Card) {
     if (!confirm(`确认删除「${card.name}」？此操作不可恢复。`)) return;
     const res = await fetch(`/api/admin/cards/${encodeURIComponent(card.id)}`, {
       method: 'DELETE',
+      headers: { 'X-Admin-Password': pass || '' },
     });
     const data = await res.json();
+    if (res.status === 401) {
+      alert('密码错误或已失效，请重新输入');
+      logout();
+      return;
+    }
     if (!res.ok) {
       alert(`删除失败：${data.error || '未知错误'}`);
       return;
     }
-    load();
+    load(pass || '');
   }
 
+  // ---- 未登录：显示密码框 ----
+  if (!pass) {
+    return (
+      <div className="mx-auto max-w-md px-4 py-16">
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
+          <h1 className="mb-2 text-2xl font-bold">🛠️ 卡牌管理后台</h1>
+          <p className="mb-6 text-sm text-gray-500">
+            请输入管理员密码（.env 里的 ADMIN_PASSWORD）
+          </p>
+          <input
+            type="password"
+            value={passInput}
+            onChange={(e) => setPassInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') tryPass();
+            }}
+            placeholder="管理员密码"
+            autoFocus
+            className="mb-3 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+          />
+          {passErr && <p className="mb-3 text-xs text-red-600">{passErr}</p>}
+          <Button onClick={tryPass} disabled={!passInput.trim()} className="w-full">
+            进入后台
+          </Button>
+          <div className="mt-4 text-center">
+            <Link href="/" className="text-xs text-gray-400 hover:text-gray-600">
+              ← 回首页
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ---- 已登录：显示卡牌管理界面 ----
   const groups: { label: string; mode: Mode; type: CardType }[] = [
     { label: '🎴 金局 · 技能卡', mode: 'gold', type: 'skill' },
     { label: '🛠️ 金局 · 装备卡', mode: 'gold', type: 'equipment' },
@@ -113,6 +197,9 @@ export default function AdminCardsPage() {
             }}
           >
             ➕ 新建卡牌
+          </Button>
+          <Button variant="ghost" size="sm" onClick={logout}>
+            退出登录
           </Button>
           <Link href="/">
             <Button variant="outline" size="sm">

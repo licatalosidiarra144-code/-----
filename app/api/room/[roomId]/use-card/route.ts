@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, playerCards } from '@/lib/db/helpers';
+import { getPlayerSession } from '@/lib/session';
 
 export async function POST(
   request: NextRequest,
@@ -9,7 +10,12 @@ export async function POST(
 ) {
   try {
     const { roomId: roomCode } = await params;
-    const { playerId, cardId } = await request.json();
+    const { cardId } = await request.json();
+
+    const session = await getPlayerSession();
+    if (!session || session.roomCode !== roomCode) {
+      return NextResponse.json({ error: '请先加入房间' }, { status: 401 });
+    }
 
     const room = await rooms.findByCode(roomCode);
     if (!room) return NextResponse.json({ error: '房间不存在' }, { status: 404 });
@@ -18,7 +24,7 @@ export async function POST(
       return NextResponse.json({ error: '游戏未在进行中' }, { status: 400 });
     }
 
-    const player = await roomPlayers.findById(playerId);
+    const player = await roomPlayers.findById(session.playerId);
     if (!player || player.roomId !== room.id) {
       return NextResponse.json({ error: '玩家不存在' }, { status: 404 });
     }

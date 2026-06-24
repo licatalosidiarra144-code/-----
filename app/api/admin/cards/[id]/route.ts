@@ -2,9 +2,10 @@
 // PUT    /api/admin/cards/[id] — 改单卡
 // DELETE /api/admin/cards/[id] — 删单卡
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { checkAdminPassword } from '@/lib/admin-auth';
 
 const CARDS_FILE = path.join(process.cwd(), 'data', 'cards.json');
 
@@ -18,7 +19,7 @@ function writeCardsFile(data: { cards: any[] }) {
 }
 
 export async function GET(
-  _req: Request,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -35,9 +36,12 @@ export async function GET(
 }
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!checkAdminPassword(req)) {
+    return NextResponse.json({ error: '需要管理员密码' }, { status: 401 });
+  }
   try {
     const { id } = await params;
     const updates = await req.json();
@@ -56,9 +60,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!checkAdminPassword(req)) {
+    return NextResponse.json({ error: '需要管理员密码' }, { status: 401 });
+  }
   try {
     const { id } = await params;
     const data = readCardsFile();

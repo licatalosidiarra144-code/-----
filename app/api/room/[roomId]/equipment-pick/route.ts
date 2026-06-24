@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, cardDraws, playerCards } from '@/lib/db/helpers';
 import { getCard } from '@/lib/cards';
+import { getPlayerSession } from '@/lib/session';
 
 export async function POST(
   request: NextRequest,
@@ -10,10 +11,15 @@ export async function POST(
 ) {
   try {
     const { roomId: roomCode } = await params;
-    const { playerId, cardIds } = await request.json();
+    const { cardIds } = await request.json();
 
     if (!Array.isArray(cardIds) || cardIds.length !== 3) {
       return NextResponse.json({ error: '请选 3 张装备卡' }, { status: 400 });
+    }
+
+    const session = await getPlayerSession();
+    if (!session || session.roomCode !== roomCode) {
+      return NextResponse.json({ error: '请先加入房间' }, { status: 401 });
     }
 
     const room = await rooms.findByCode(roomCode);
@@ -23,7 +29,7 @@ export async function POST(
       return NextResponse.json({ error: '不在选装备卡阶段' }, { status: 400 });
     }
 
-    const player = await roomPlayers.findById(playerId);
+    const player = await roomPlayers.findById(session.playerId);
     if (!player || player.roomId !== room.id) {
       return NextResponse.json({ error: '玩家不存在' }, { status: 404 });
     }
@@ -48,13 +54,6 @@ export async function POST(
     // 验证：3 张之间不重复
     if (new Set(cardIds).size !== 3) {
       return NextResponse.json({ error: '装备卡之间不能重复' }, { status: 400 });
-    }
-
-    // 验证：自己之前没选过
-    const existing = await playerCards.findByPlayerAndCard(player.id, cardIds[0]);
-    if (existing && existing.round === room.round) {
-      // 检查是同一轮
-      // 其实这步可以省，因为 round 已经隔离
     }
 
     // 更新 draw.selectedCardId（用逗号分隔存）
