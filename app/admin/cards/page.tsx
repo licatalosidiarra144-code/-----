@@ -233,9 +233,19 @@ export default function AdminCardsPage() {
               const list = cards.filter((c) => c.mode === g.mode && c.type === g.type);
               return (
                 <section key={g.label}>
-                  <h2 className="mb-3 text-lg font-semibold text-white/90">
+                  <h2
+                    className={cn(
+                      'mb-3 rounded-lg border px-3 py-2 text-lg font-semibold',
+                      g.mode === 'silver' &&
+                        'border-slate-400/40 bg-slate-500/20 text-slate-100',
+                      g.mode === 'prismatic' &&
+                        'border-fuchsia-400/40 bg-fuchsia-500/20 text-fuchsia-100',
+                      g.mode === 'gold' &&
+                        'border-amber-400/40 bg-amber-500/20 text-amber-100'
+                    )}
+                  >
                     {g.label}
-                    <span className="ml-2 text-sm font-normal text-white/55">
+                    <span className="ml-2 text-sm font-normal opacity-70">
                       ({list.length} 张)
                     </span>
                   </h2>
@@ -283,6 +293,39 @@ export default function AdminCardsPage() {
 // 单卡卡片（列表里的行）
 // ============================================
 
+const MODE_CARD_STYLE: Record<
+  Mode,
+  { shell: string; iconBg: string; tag: string; tagText: string }
+> = {
+  silver: {
+    shell:
+      'border-slate-300/50 bg-gradient-to-br from-slate-100/15 via-slate-900/80 to-slate-950 shadow-[0_8px_24px_rgba(0,0,0,0.45)]',
+    iconBg: 'bg-slate-200 text-slate-900 ring-2 ring-slate-100/80',
+    tag: 'bg-slate-200/90',
+    tagText: 'text-slate-900',
+  },
+  prismatic: {
+    shell:
+      'border-fuchsia-400/55 bg-gradient-to-br from-fuchsia-500/25 via-violet-950/85 to-slate-950 shadow-[0_8px_28px_rgba(192,38,211,0.25)]',
+    iconBg: 'bg-gradient-to-br from-fuchsia-400 to-violet-600 text-white ring-2 ring-fuchsia-200/50',
+    tag: 'bg-fuchsia-400/90',
+    tagText: 'text-white',
+  },
+  gold: {
+    shell:
+      'border-amber-400/55 bg-gradient-to-br from-amber-400/25 via-orange-950/80 to-slate-950 shadow-[0_8px_28px_rgba(245,158,11,0.28)]',
+    iconBg: 'bg-gradient-to-br from-amber-300 to-orange-500 text-amber-950 ring-2 ring-amber-100/60',
+    tag: 'bg-amber-300/95',
+    tagText: 'text-amber-950',
+  },
+};
+
+const MODE_NAME: Record<Mode, string> = {
+  silver: '白银',
+  prismatic: '棱彩',
+  gold: '黄金',
+};
+
 function CardRow({
   card,
   onEdit,
@@ -292,33 +335,59 @@ function CardRow({
   onEdit: () => void;
   onDelete: () => void;
 }) {
-  // 稀有度：暗色背景上的发光边框
+  const modeStyle = MODE_CARD_STYLE[card.mode];
   const rarityClass = {
-    common: 'border-white/15',
-    rare: 'border-cyan-400/60 shadow-[0_0_12px_rgba(34,211,238,0.25)]',
-    epic: 'border-fuchsia-400/60 shadow-[0_0_16px_rgba(232,121,249,0.3)]',
+    common: '',
+    rare: 'ring-1 ring-cyan-300/70',
+    epic: 'ring-1 ring-fuchsia-300/80',
   }[card.rarity || 'common'];
+
   return (
     <div
       className={cn(
-        'rounded-xl border-2 bg-white/5 p-4 backdrop-blur-sm transition hover:bg-white/10',
+        'rounded-xl border-2 p-4 transition hover:-translate-y-0.5 hover:brightness-110',
+        modeStyle.shell,
         rarityClass
       )}
     >
       <div className="flex items-start gap-3">
-        <div className="text-4xl drop-shadow">{card.imageUrl}</div>
+        <div
+          className={cn(
+            'flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-3xl shadow-inner',
+            modeStyle.iconBg
+          )}
+        >
+          {card.imageUrl}
+        </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <div className="truncate font-bold text-white">{card.name}</div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <div className="truncate text-base font-bold text-white drop-shadow">
+              {card.name}
+            </div>
+            <span
+              className={cn(
+                'rounded px-1.5 py-0.5 text-[10px] font-bold',
+                modeStyle.tag,
+                modeStyle.tagText
+              )}
+            >
+              {MODE_NAME[card.mode]}
+            </span>
             {card.rarity === 'rare' && (
-              <span className="text-xs text-cyan-300">稀有</span>
+              <span className="rounded bg-cyan-400/25 px-1.5 py-0.5 text-[10px] font-semibold text-cyan-200">
+                稀有
+              </span>
             )}
             {card.rarity === 'epic' && (
-              <span className="text-xs text-fuchsia-300">史诗</span>
+              <span className="rounded bg-fuchsia-400/30 px-1.5 py-0.5 text-[10px] font-semibold text-fuchsia-100">
+                史诗
+              </span>
             )}
           </div>
-          <div className="mt-1 text-xs font-mono text-white/55">{card.id}</div>
-          <div className="mt-1 line-clamp-2 text-sm text-white/65">{card.desc}</div>
+          <div className="mt-1 text-xs font-mono text-white/50">{card.id}</div>
+          <div className="mt-1.5 line-clamp-2 text-sm leading-snug text-white/85">
+            {card.desc}
+          </div>
         </div>
       </div>
       <div className="mt-3 flex gap-2">
