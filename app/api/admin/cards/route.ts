@@ -39,11 +39,14 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (!['gold', 'rainbow'].includes(newCard.mode)) {
-      return NextResponse.json({ error: 'mode 必须是 gold 或 rainbow' }, { status: 400 });
+    if (!['silver', 'prismatic', 'gold'].includes(newCard.mode)) {
+      return NextResponse.json(
+        { error: 'mode 必须是 silver / prismatic / gold' },
+        { status: 400 }
+      );
     }
-    if (!['skill', 'equipment'].includes(newCard.type)) {
-      return NextResponse.json({ error: 'type 必须是 skill 或 equipment' }, { status: 400 });
+    if (newCard.type !== 'skill') {
+      return NextResponse.json({ error: 'type 必须是 skill' }, { status: 400 });
     }
 
     const data = readCardsFile();

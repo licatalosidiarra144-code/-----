@@ -5,7 +5,8 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { CardTile } from '@/components/card/card-tile';
-import { type Card } from '@/lib/cards';
+import { type Card, type GameMode, MODE_LABELS } from '@/lib/cards';
+import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
 
 interface Player {
   id: number;
@@ -18,14 +19,16 @@ interface RoomData {
     id: number;
     code: string;
     status: string;
-    currentMode: 'gold' | 'rainbow' | null;
+    currentMode: GameMode | null;
     round: number;
     ownerId: string;
   };
   players: Player[];
-  draws: Record<number, { skill?: { cards: Card[]; selectedId?: string }; equipment?: { cards: Card[]; selectedIds: string[] } }>;
+  draws: Record<
+    number,
+    { skill?: { cards: Card[]; selectedId?: string; rerollsUsed: number } }
+  >;
   selectedCards: Record<number, Card[]>;
-  cardUses: Record<number, Record<string, number>>;
   me: { id: number; nickname: string; isOwner: boolean } | null;
 }
 
@@ -35,13 +38,18 @@ interface Me {
   isOwner: boolean;
 }
 
-// 4 个槽位的渐变色（按 index 取：红橙 / 琥珀 / 青绿 / 紫粉）
 const PLAYER_GRADIENTS = [
   'from-rose-500 via-red-500 to-orange-500',
   'from-amber-500 via-orange-500 to-yellow-500',
   'from-emerald-500 via-teal-500 to-cyan-500',
   'from-violet-500 via-purple-500 to-fuchsia-500',
 ] as const;
+
+const MODE_BANNER: Record<GameMode, string> = {
+  silver: '🥈 白银局',
+  prismatic: '🌈 棱彩局',
+  gold: '🎴 黄金局',
+};
 
 export default function RoomPage() {
   return (
@@ -67,23 +75,20 @@ function RoomPageInner() {
   const [data, setData] = useState<RoomData | null>(null);
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
-  const [playerView, setPlayerView] = useState<Player | null>(null); // 点别人头像看
+  const [playerView, setPlayerView] = useState<Player | null>(null);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 当前页面的 origin（用于拼二维码链接）
   const [origin, setOrigin] = useState('');
   useEffect(() => {
     setOrigin(window.location.origin);
   }, []);
 
-  // 邀请好友（显示二维码）+ 加入弹窗
   const [inviteOpen, setInviteOpen] = useState(false);
   const [joinOpen, setJoinOpen] = useState(false);
   const [joinNick, setJoinNick] = useState('');
   const [joinErr, setJoinErr] = useState('');
   const [joinLoading, setJoinLoading] = useState(false);
 
-  // 扫码进入（URL 带 ?join=1 且我还没加入）→ 弹加入框
   useEffect(() => {
     if (joinFlag && !me) setJoinOpen(true);
   }, [joinFlag, me]);
@@ -111,11 +116,9 @@ function RoomPageInner() {
         setJoinErr(d.error || '加入失败');
         return;
       }
-      // 服务端通过 Set-Cookie 写入玩家身份，me 会被下次轮询带回来
       setMe(d.player);
       setJoinOpen(false);
       setJoinNick('');
-      // 把 ?join=1 从地址栏去掉，看着清爽
       window.history.replaceState({}, '', `/room/${roomId}`);
     } catch {
       setJoinErr('网络错误，请重试');
@@ -124,7 +127,6 @@ function RoomPageInner() {
     }
   }
 
-  // 轮询房间状态（每 1.5 秒）；同时把服务端认定的 me 也带回
   useEffect(() => {
     if (!roomId) return;
     function fetchRoom() {
@@ -151,7 +153,6 @@ function RoomPageInner() {
     if (!me?.isOwner) return;
     setActionLoading(true);
     try {
-      // 不用再传 ownerId，cookie 已经标识了房主
       const res = await fetch(`/api/room/${roomId}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -180,31 +181,14 @@ function RoomPageInner() {
     }
   }
 
-  async function pickEquipment(cardIds: string[]) {
+  async function rerollSkill() {
     if (!me) return;
     setActionLoading(true);
     try {
-      const res = await fetch(`/api/room/${roomId}/equipment-pick`, {
+      const res = await fetch(`/api/room/${roomId}/skill-reroll`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardIds }),
-      });
-      const d = await res.json();
-      if (!res.ok) alert(d.error);
-    } finally {
-      setActionLoading(false);
-    }
-  }
-
-  async function useCard(cardId: string) {
-    if (!me) return;
-    if (!confirm('确认使用这张装备卡？剩余次数会减 1')) return;
-    setActionLoading(true);
-    try {
-      const res = await fetch(`/api/room/${roomId}/use-card`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardId }),
+        body: JSON.stringify({}),
       });
       const d = await res.json();
       if (!res.ok) alert(d.error);
@@ -238,8 +222,6 @@ function RoomPageInner() {
     );
   }
 
-  // 扫码进入的人 me 是 null，必须先渲染 join 弹窗
-  // 否则会被「加载中」页面挡住，弹窗永远出不来
   const joinDialog = joinOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
       <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-xl">
@@ -302,19 +284,16 @@ function RoomPageInner() {
   const myDraw = data.draws[me.id];
   const mySelectedCards = data.selectedCards[me.id] || [];
   const mySkillSelected = myDraw?.skill?.selectedId;
-  const myEquipmentSelectedIds = myDraw?.equipment?.selectedIds || [];
 
   return (
     <div className="relative mx-auto min-h-screen max-w-5xl px-4 py-8">
-      {/* ===== 暗色霓虹背景 ===== */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950" />
-      <div className="pointer-events-none fixed top-1/4 left-1/4 -z-10 h-96 w-96 rounded-full bg-purple-600/30 blur-3xl" />
-      <div className="pointer-events-none fixed bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-blue-600/30 blur-3xl" />
-      <div className="pointer-events-none fixed top-1/2 left-1/2 -z-10 h-96 w-96 rounded-full bg-pink-600/20 blur-3xl" />
-      {/* 麻将桌纹理（深绿暗光） */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.08),_transparent_60%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 text-white/50">
+        <FloatingPaths position={1} />
+        <FloatingPaths position={-1} />
+      </div>
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.08),_transparent_60%)]" />
 
-      {/* 顶部信息条 */}
       <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <div>
@@ -335,7 +314,9 @@ function RoomPageInner() {
           </div>
           <div className="text-right">
             <div className="text-sm text-white/50">状态</div>
-            <div className="text-lg font-semibold text-white">{statusLabel(data.room.status)}</div>
+            <div className="text-lg font-semibold text-white">
+              {statusLabel(data.room.status)}
+            </div>
             {data.room.round > 0 && (
               <div className="text-xs text-white/40">第 {data.room.round} 局</div>
             )}
@@ -349,19 +330,16 @@ function RoomPageInner() {
         </div>
         {data.room.currentMode && (
           <div className="mt-3 text-center text-lg font-bold text-white drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]">
-            {data.room.currentMode === 'gold' ? '🎴 金局（道具赛）' : '🌈 彩局（OP 大招局）'}
+            {MODE_BANNER[data.room.currentMode] || MODE_LABELS[data.room.currentMode]}
           </div>
         )}
       </div>
 
-      {/* 玩家列表 */}
       <div className="mb-6">
         <div className="mb-3 px-1 text-sm font-semibold text-white/80">🪑 玩家</div>
         <div className="grid grid-cols-4 gap-3">
           {data.players.map((p, idx) => {
-            const pDraw = data.draws[p.id];
-            const skillDone = pDraw?.skill?.selectedId;
-            const equipDone = pDraw?.equipment?.selectedIds.length === 3;
+            const skillDone = data.draws[p.id]?.skill?.selectedId;
             const grad = PLAYER_GRADIENTS[idx % PLAYER_GRADIENTS.length];
             return (
               <button
@@ -369,35 +347,24 @@ function RoomPageInner() {
                 onClick={() => setPlayerView(p)}
                 className={`group relative flex flex-col items-center overflow-hidden rounded-2xl bg-gradient-to-br ${grad} p-4 shadow-md transition-all hover:scale-105 hover:shadow-xl`}
               >
-                {/* 玻璃态叠加 + 高光 */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/10" />
                 <div className="pointer-events-none absolute -top-8 -right-8 h-20 w-20 rounded-full bg-white/20 blur-2xl" />
-
-                {/* 头像 */}
                 <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/40 bg-white/25 text-xl font-bold text-white shadow-inner backdrop-blur-sm">
                   {p.nickname[0]}
                   {p.isOwner && (
-                    <span className="absolute -right-1 -top-1 text-base drop-shadow">
-                      👑
-                    </span>
+                    <span className="absolute -right-1 -top-1 text-base drop-shadow">👑</span>
                   )}
                 </div>
-
-                {/* 昵称 */}
                 <div className="relative mt-2 text-sm font-semibold text-white drop-shadow">
                   {p.nickname}
                 </div>
-
-                {/* 状态 chip */}
                 <div className="relative mt-1.5">
                   <span className="inline-block rounded-full bg-white/30 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
                     {data.room.status === 'waiting'
                       ? '等待中'
-                      : skillDone && equipDone
-                      ? '已就绪 ✓'
                       : skillDone
-                      ? '等装备'
-                      : '选技能中'}
+                        ? '已就绪 ✓'
+                        : '选技能中'}
                   </span>
                 </div>
               </button>
@@ -415,9 +382,7 @@ function RoomPageInner() {
                 <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-dashed border-white/60 bg-white/20 text-xl font-bold text-white/70 backdrop-blur-sm">
                   +
                 </div>
-                <div className="relative mt-2 text-sm font-medium text-white/80">
-                  空位
-                </div>
+                <div className="relative mt-2 text-sm font-medium text-white/80">空位</div>
                 <div className="relative mt-1.5">
                   <span className="inline-block rounded-full bg-white/30 px-2 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm">
                     等待加入
@@ -429,14 +394,13 @@ function RoomPageInner() {
         </div>
       </div>
 
-      {/* 主内容区 */}
       {data.room.status === 'waiting' && (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
           {me.isOwner ? (
             <>
               <p className="mb-2 text-lg font-semibold text-white">等齐 4 人后，房主点这里开始</p>
               <p className="mb-6 text-sm text-white/50">
-                系统会随机选"金局"或"彩局"
+                系统按概率抽局型：白银 30% / 棱彩 40% / 黄金 30%
               </p>
               <Button
                 onClick={startGame}
@@ -454,43 +418,27 @@ function RoomPageInner() {
 
       {data.room.status === 'skill_picking' && myDraw?.skill && (
         <SkillPickPhase
-          me={me}
           cards={myDraw.skill.cards}
           selectedId={mySkillSelected}
+          rerollsUsed={myDraw.skill.rerollsUsed ?? 0}
           allPlayersReady={data.players.every(
             (p) => data.draws[p.id]?.skill?.selectedId
           )}
           onPick={pickSkill}
-          loading={actionLoading}
-        />
-      )}
-
-      {data.room.status === 'equipment_picking' && myDraw?.equipment && (
-        <EquipmentPickPhase
-          me={me}
-          cards={myDraw.equipment.cards}
-          selectedIds={myEquipmentSelectedIds}
-          allPlayersReady={data.players.every(
-            (p) => data.draws[p.id]?.equipment?.selectedIds.length === 3
-          )}
-          onPick={pickEquipment}
+          onReroll={rerollSkill}
           loading={actionLoading}
         />
       )}
 
       {data.room.status === 'playing' && (
         <PlayingPhase
-          me={me}
           mySelectedCards={mySelectedCards}
-          cardUses={data.cardUses[me.id] || {}}
           isOwner={me.isOwner}
-          onUseCard={useCard}
           onNextRound={nextRound}
           loading={actionLoading}
         />
       )}
 
-      {/* 玩家详情弹窗 */}
       {playerView && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
@@ -502,7 +450,7 @@ function RoomPageInner() {
           >
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-bold text-white">
-                {playerView.nickname} 的卡
+                {playerView.nickname} 的技能卡
                 {playerView.isOwner && ' 👑'}
               </h3>
               <button
@@ -515,15 +463,17 @@ function RoomPageInner() {
             <div className="flex flex-wrap gap-2">
               {(data.selectedCards[playerView.id] || []).map((c) => (
                 <div key={c.id} className="text-xs">
-                  <CardTile card={c} size="sm" disabled gray={c.type === 'equipment' && c.uses === 0} />
+                  <CardTile card={c} size="sm" disabled />
                 </div>
               ))}
+              {(data.selectedCards[playerView.id] || []).length === 0 && (
+                <p className="text-sm text-white/50">还没选技能卡</p>
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* 邀请弹窗（显示二维码） */}
       {inviteOpen && origin && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
@@ -542,9 +492,7 @@ function RoomPageInner() {
                 ✕
               </button>
             </div>
-            <p className="mb-4 text-sm text-white/50">
-              让好友用浏览器扫这个码进房间
-            </p>
+            <p className="mb-4 text-sm text-white/50">让好友用浏览器扫这个码进房间</p>
             <div className="flex justify-center rounded-xl border border-white/10 bg-white p-4">
               <QRCodeSVG
                 value={`${origin}/room/${roomId}?join=1`}
@@ -563,7 +511,6 @@ function RoomPageInner() {
         </div>
       )}
 
-      {/* 扫码进入弹窗（变量定义在前面 loading return 之前，loading 时也能渲染） */}
       {joinDialog}
     </div>
   );
@@ -573,7 +520,6 @@ function statusLabel(status: string) {
   const map: Record<string, string> = {
     waiting: '⏳ 等待中',
     skill_picking: '🎯 选技能卡',
-    equipment_picking: '⚔️ 选装备卡',
     playing: '🀄 游戏中',
     finished: '🏁 已结束',
   };
@@ -581,18 +527,20 @@ function statusLabel(status: string) {
 }
 
 function SkillPickPhase({
-  me,
   cards,
   selectedId,
+  rerollsUsed,
   allPlayersReady,
   onPick,
+  onReroll,
   loading,
 }: {
-  me: Me;
   cards: Card[];
   selectedId?: string;
+  rerollsUsed: number;
   allPlayersReady: boolean;
   onPick: (cardId: string) => void;
+  onReroll: () => void;
   loading: boolean;
 }) {
   if (selectedId) {
@@ -606,18 +554,22 @@ function SkillPickPhase({
           </div>
         )}
         <p className="mt-4 text-sm text-white/50">
-          {allPlayersReady ? '所有人选完了，进入下一环节...' : '等其他人选完...'}
+          {allPlayersReady ? '所有人选完了，进入游戏...' : '等其他人选完...'}
         </p>
       </div>
     );
   }
+
+  const canReroll = rerollsUsed < 1;
+
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
       <h2 className="mb-2 text-center text-xl font-bold text-white">🎯 选 1 张技能卡（4 选 1）</h2>
       <p className="mb-6 text-center text-sm text-white/50">
-        技能卡是永久被动效果，跟你的装备卡配合使用
+        本局可重选 1 次
+        {canReroll ? '（尚未使用）' : '（已用完）'}
       </p>
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="mb-6 flex flex-wrap justify-center gap-4">
         {cards.map((c) => (
           <CardTile
             key={c.id}
@@ -627,78 +579,13 @@ function SkillPickPhase({
           />
         ))}
       </div>
-    </div>
-  );
-}
-
-function EquipmentPickPhase({
-  me,
-  cards,
-  selectedIds,
-  allPlayersReady,
-  onPick,
-  loading,
-}: {
-  me: Me;
-  cards: Card[];
-  selectedIds: string[];
-  allPlayersReady: boolean;
-  onPick: (cardIds: string[]) => void;
-  loading: boolean;
-}) {
-  const [picked, setPicked] = useState<string[]>(selectedIds);
-
-  function toggle(id: string) {
-    if (picked.includes(id)) {
-      setPicked(picked.filter((x) => x !== id));
-    } else if (picked.length < 3) {
-      setPicked([...picked, id]);
-    }
-  }
-
-  if (selectedIds.length === 3) {
-    return (
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
-        <p className="mb-2 text-lg font-semibold text-white">✅ 你已选 3 张装备卡</p>
-        <p className="mt-4 text-sm text-white/50">
-          {allPlayersReady ? '所有人选完了，进入游戏...' : '等其他人选完...'}
-        </p>
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
-          {selectedIds.map((id) => {
-            const c = cards.find((x) => x.id === id);
-            return c ? <CardTile key={id} card={c} size="sm" selected disabled /> : null;
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
-      <h2 className="mb-2 text-center text-xl font-bold text-white">⚔️ 选 3 张装备卡（5 选 3）</h2>
-      <p className="mb-6 text-center text-sm text-white/50">
-        装备卡有使用次数限制，用完变灰
-      </p>
-      <div className="mb-6 flex flex-wrap justify-center gap-4">
-        {cards.map((c) => (
-          <CardTile
-            key={c.id}
-            card={c}
-            selected={picked.includes(c.id)}
-            onClick={() => toggle(c.id)}
-            disabled={loading}
-          />
-        ))}
-      </div>
       <div className="text-center">
-        <p className="mb-3 text-sm text-white/80">
-          已选 <span className="font-bold text-pink-400">{picked.length}</span> / 3
-        </p>
         <Button
-          onClick={() => onPick(picked)}
-          disabled={picked.length !== 3 || loading}
+          variant="outline"
+          onClick={onReroll}
+          disabled={!canReroll || loading}
         >
-          确认选择
+          {canReroll ? '🔄 重选一次' : '重选已用完'}
         </Button>
       </div>
     </div>
@@ -706,62 +593,27 @@ function EquipmentPickPhase({
 }
 
 function PlayingPhase({
-  me,
   mySelectedCards,
-  cardUses,
   isOwner,
-  onUseCard,
   onNextRound,
   loading,
 }: {
-  me: Me;
   mySelectedCards: Card[];
-  cardUses: Record<string, number>;
   isOwner: boolean;
-  onUseCard: (cardId: string) => void;
   onNextRound: () => void;
   loading: boolean;
 }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
-        <h2 className="mb-2 text-center text-xl font-bold text-white">🀄 你的卡组</h2>
+        <h2 className="mb-2 text-center text-xl font-bold text-white">🀄 你的技能卡</h2>
         <p className="mb-6 text-center text-sm text-white/50">
-          点装备卡的"使用"按钮 → 剩余次数 -1（自己 + 其他人都能看到变灰）
+          效果在真麻将桌上执行；这里只做展示
         </p>
-
-        <div className="mb-6">
-          <h3 className="mb-3 text-sm font-semibold text-white/80">技能卡（永久）</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {mySelectedCards
-              .filter((c) => c.type === 'skill')
-              .map((c) => (
-                <CardTile key={c.id} card={c} selected disabled />
-              ))}
-          </div>
-        </div>
-
-        <div>
-          <h3 className="mb-3 text-sm font-semibold text-white/80">装备卡（可使用）</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {mySelectedCards
-              .filter((c) => c.type === 'equipment')
-              .map((c) => {
-                const remaining = cardUses[c.id] ?? c.uses;
-                return (
-                  <div key={c.id} className="flex flex-col items-center">
-                    <CardTile card={c} gray={remaining <= 0} />
-                    <button
-                      onClick={() => onUseCard(c.id)}
-                      disabled={loading || remaining <= 0}
-                      className="mt-2 rounded-md bg-gradient-to-r from-pink-600 to-rose-600 px-4 py-1 text-xs font-semibold text-white shadow-lg shadow-pink-500/30 hover:from-pink-500 hover:to-rose-500 disabled:opacity-50"
-                    >
-                      使用（剩 {remaining}/{c.uses}）
-                    </button>
-                  </div>
-                );
-              })}
-          </div>
+        <div className="flex flex-wrap justify-center gap-3">
+          {mySelectedCards.map((c) => (
+            <CardTile key={c.id} card={c} selected disabled />
+          ))}
         </div>
       </div>
 

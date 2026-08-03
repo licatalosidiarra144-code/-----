@@ -22,7 +22,6 @@ export function CardTile({
   gray = false,
   size = 'md',
   onClick,
-  showUses = true,
   badge,
 }: {
   card: Card;
@@ -31,7 +30,6 @@ export function CardTile({
   gray?: boolean;
   size?: 'sm' | 'md' | 'lg';
   onClick?: () => void;
-  showUses?: boolean;
   badge?: string;
 }) {
   const sizeClasses = {
@@ -73,11 +71,6 @@ export function CardTile({
         <div className="mt-1 line-clamp-2 text-xs text-gray-600">
           {card.desc}
         </div>
-        {showUses && card.type === 'equipment' && (
-          <div className="mt-1 text-xs font-semibold text-red-600">
-            剩 {card.uses} / {card.uses} 次
-          </div>
-        )}
       </div>
     </button>
   );

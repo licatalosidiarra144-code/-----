@@ -1,23 +1,29 @@
 # 麻将抽卡器 💌
 
-> 📅 项目状态：MVP 跑通 + **已部署到腾讯云**（`http://1.14.154.250`）+ **扫码加入** + **卡牌管理后台（带密码）**
+> 📅 项目状态：MVP 跑通 + **已部署到腾讯云**（[`https://entrance-vault-tried-yen.trycloudflare.com`](https://entrance-vault-tried-yen.trycloudflare.com/)）+ **扫码加入** + **卡牌管理后台（带密码）**
 
-4 人一桌，扫一个房间码进来，系统随机选"金局/彩局"，抽技能卡 + 装备卡，真打麻将时装备卡点"使用"变灰。
+4 人一桌，扫一个房间码进来，系统按概率抽「白银 / 棱彩 / 黄金」局，每人 4 选 1 技能卡（可重选 1 次），真麻将桌上执行效果。
 
 ## 🎮 怎么玩（生产环境）
 
-直接在浏览器打开：**`http://1.14.154.250`**
+直接在浏览器打开：**[`https://entrance-vault-tried-yen.trycloudflare.com/`](https://entrance-vault-tried-yen.trycloudflare.com/)**
+
+> ✅ 走 Cloudflare 隧道（自带 HTTPS），**手机浏览器、微信扫码都能进**
 
 1. 房主打开 → 输昵称 → 创建房间 → 拿到 6 位房间码
 2. 其他人 → 输房间码 + 昵称 → 加入
 3. 4 人齐 → 房主点"开始"
-4. 系统随机金/彩局
-5. 第一轮：每人 4 张技能卡（4 选 1）
-6. 第二轮：每人 5 张装备卡（5 选 3）
-7. 展示页：看自己的卡 / 点别人头像看 / 装备卡"使用"变灰
-8. 房主点"开下一局"
+4. 系统抽局型：白银 30% / 棱彩 40% / 黄金 30%（严格分池）
+5. 每人抽 4 张技能卡，选 1 张（可重选 1 次）
+6. 展示页：看自己的技能 / 点别人头像看
+7. 房主点"开下一局"
 
-> ⚠️ 服务器用 HTTP（无 HTTPS），所以**微信扫码进不去**。手机用浏览器（Chrome / Safari / UC）输 IP 或扫码都行。
+> ⚠️ URL 是临时的，每次服务器重启会变（要长期稳定就得买域名做正式隧道）。
+
+## 🛡️ 卡牌管理后台
+
+- **链接**：[https://entrance-vault-tried-yen.trycloudflare.com/admin/cards](https://entrance-vault-tried-yen.trycloudflare.com/admin/cards)
+- **密码**：`521314`
 
 ## 🚀 本地启动
 
@@ -36,16 +42,16 @@ npm run dev
 - 🔐 **Cookie 会话**（HttpOnly，玩家身份防伪造）
 - 🛡️ **后台密码**（`/admin/cards` 改卡要密码）
 - 📱 **二维码邀请**（`qrcode.react`）
-- 🎴 **金局 / 彩局** 系统随机选模式
-- 🎯 **技能卡 + 装备卡** 两轮抽卡
-- 🛠️ **卡牌管理后台** `/admin/cards`（增删改所有卡，存 `data/cards.json`）
+- 🎴 **白银 / 棱彩 / 黄金**（30% / 40% / 30%，严格分池）
+- 🎯 **技能卡 4 选 1**（可重选 1 次；无装备卡）
+- 🛠️ **卡牌管理后台** `/admin/cards`（增删改技能卡，存 `data/cards.json`）
 - 👀 **查看别人卡组**（点玩家头像）
 - 💾 **PostgreSQL 持久化**（PM2 重启不丢房间）
 
 ## 🔐 安全说明
 
 - 玩家身份用 **HttpOnly Cookie** 存在服务端，浏览器 JS 拿不到，请求时自动带过去
-- 所有写操作（开始游戏 / 选卡 / 使用 / 开下一局）都从 cookie 读 playerId/ownerId，**不再信请求体**
+- 所有写操作（开始游戏 / 选卡 / 重选 / 开下一局）都从 cookie 读 playerId/ownerId，**不再信请求体**
 - 后台 `/admin/cards` 写操作需要 `.env` 里 `ADMIN_PASSWORD`，前端输一次记住在 localStorage
 - 没 HTTPS 也能防伪造（前提是别人拿不到你的浏览器 cookie），但不防中间人窃听
 
@@ -161,4 +167,4 @@ pm2 restart majiang          # 重启
 - **后台界面**：访问 `/admin/cards`，输 `.env` 里 `ADMIN_PASSWORD` 进去，可视化增删改
 - **直接改文件**：编辑 `data/cards.json`，改完自动生效（带缓存）
 
-字段：`id / mode(gold|rainbow) / type(skill|equipment) / name / desc / uses / imageUrl / rarity`
+字段：`id / mode(silver|prismatic|gold) / type(skill) / name / desc / uses(0) / imageUrl / rarity`

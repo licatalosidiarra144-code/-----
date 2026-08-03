@@ -19,7 +19,7 @@ export function Button({
     'inline-flex items-center justify-center font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed';
   const variants = {
     primary:
-      'bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-500 hover:to-rose-500 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50',
+      'bg-white/15 text-white hover:bg-white/25 shadow-sm hover:shadow-md backdrop-blur-sm',
     secondary:
       'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm',
     ghost:

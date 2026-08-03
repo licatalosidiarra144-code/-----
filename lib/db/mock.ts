@@ -130,6 +130,7 @@ export const mockDb = {
         drawType: data.drawType!,
         cardIds: data.cardIds!,
         selectedCardId: data.selectedCardId || null,
+        rerollsUsed: data.rerollsUsed ?? 0,
       } as CardDraw;
       _cardDraws.push(d);
       return d;
@@ -156,6 +157,18 @@ export const mockDb = {
     ): Promise<CardDraw | null> => {
       const d = _cardDraws.find((x) => x.id === id);
       if (d) d.selectedCardId = selectedCardId;
+      return d || null;
+    },
+    updateOffer: async (
+      id: number,
+      cardIds: string[],
+      rerollsUsed: number
+    ): Promise<CardDraw | null> => {
+      const d = _cardDraws.find((x) => x.id === id);
+      if (d) {
+        d.cardIds = cardIds;
+        d.rerollsUsed = rerollsUsed;
+      }
       return d || null;
     },
   },

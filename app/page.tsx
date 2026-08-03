@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
 
 export default function HomePage() {
   const router = useRouter();
@@ -71,27 +72,32 @@ export default function HomePage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* ===== 暗色霓虹背景 ===== */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950" />
-      <div className="pointer-events-none fixed top-1/4 left-1/4 -z-10 h-96 w-96 rounded-full bg-purple-600/30 blur-3xl" />
-      <div className="pointer-events-none fixed bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-blue-600/30 blur-3xl" />
-      <div className="pointer-events-none fixed top-1/2 left-1/2 -z-10 h-96 w-96 rounded-full bg-pink-600/20 blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+      {/* ===== 流动曲线背景（两层叠加，反向） ===== */}
+      <div className="pointer-events-none fixed inset-0 z-0 text-white/85">
+        <FloatingPaths position={1} />
+        <FloatingPaths position={-1} />
+      </div>
+      {/* 底色兜底（防止透明区） */}
+      <div className="pointer-events-none fixed inset-0 z-0 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
 
       <div className="mx-auto max-w-2xl px-4 py-16">
         {/* Logo + 标题 */}
         <div className="text-center">
-          <div className="mb-4 inline-block text-7xl drop-shadow-[0_0_24px_rgba(244,63,94,0.5)]">
-            🀄
+          <div
+            className="mb-4 inline-block text-7xl font-black text-rose-300 drop-shadow-[0_0_24px_rgba(244,63,94,0.5)]"
+            style={{ fontFamily: 'var(--font-noto-serif-tc), "PingFang TC", serif' }}
+          >
+            發
           </div>
           <h1 className="mb-3 bg-gradient-to-r from-pink-300 via-rose-300 to-orange-300 bg-clip-text text-4xl font-bold tracking-tight text-transparent drop-shadow">
             麻将抽卡器
           </h1>
           <p className="text-lg text-white/70">
-            4 人一桌 · 抽技能卡 + 装备卡
+            4 人一桌 · 只抽技能卡
             <br />
             <span className="text-sm text-white/40">
-              金局=道具赛，彩局=OP 大招局
+              白银 30% · 棱彩 40% · 黄金 30%
             </span>
           </p>
         </div>
@@ -107,7 +113,7 @@ export default function HomePage() {
               }}
               className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
                 mode === 'create'
-                  ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
+                  ? 'bg-white/15 text-white shadow-sm'
                   : 'text-white/60 hover:text-white'
               }`}
             >
@@ -120,7 +126,7 @@ export default function HomePage() {
               }}
               className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
                 mode === 'join'
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-blue-500/30'
+                  ? 'bg-white/15 text-white shadow-sm'
                   : 'text-white/60 hover:text-white'
               }`}
             >

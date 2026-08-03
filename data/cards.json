@@ -1,37 +1,1124 @@
 {
   "cards": [
-    {"id":"gold-skill-01","mode":"gold","type":"skill","name":"道具大师","desc":"你的每张装备卡使用次数 +1","uses":0,"imageUrl":"🛠️","rarity":"epic"},
-    {"id":"gold-skill-02","mode":"gold","type":"skill","name":"锦囊妙计","desc":"装备卡使用后有概率恢复 1 次使用机会","uses":0,"imageUrl":"📜","rarity":"rare"},
-    {"id":"gold-skill-03","mode":"gold","type":"skill","name":"顺手牵羊","desc":"装备卡使用后可额外摸一张牌","uses":0,"imageUrl":"🤏","rarity":"common"},
-    {"id":"gold-skill-04","mode":"gold","type":"skill","name":"妙手回春","desc":"装备卡效果未达成时，可立即重试一次","uses":0,"imageUrl":"🩹","rarity":"rare"},
-    {"id":"gold-skill-05","mode":"gold","type":"skill","name":"装备强化","desc":"装备卡效果数值翻倍","uses":0,"imageUrl":"⚡","rarity":"rare"},
-    {"id":"gold-skill-06","mode":"gold","type":"skill","name":"借力打力","desc":"看到对手用装备时，你可立即用同种一次","uses":0,"imageUrl":"🥷","rarity":"epic"},
-
-    {"id":"gold-equip-01","mode":"gold","type":"equipment","name":"再摸一张","desc":"多抽一张牌","uses":3,"imageUrl":"🎴","rarity":"common"},
-    {"id":"gold-equip-02","mode":"gold","type":"equipment","name":"换牌","desc":"弃掉一张牌，重新抽一张","uses":3,"imageUrl":"🔄","rarity":"common"},
-    {"id":"gold-equip-03","mode":"gold","type":"equipment","name":"偷看","desc":"看对手一张暗牌","uses":2,"imageUrl":"👁️","rarity":"rare"},
-    {"id":"gold-equip-04","mode":"gold","type":"equipment","name":"标记","desc":"标记一张牌的位置（之后可看）","uses":2,"imageUrl":"📍","rarity":"common"},
-    {"id":"gold-equip-05","mode":"gold","type":"equipment","name":"跳过","desc":"跳过你的本轮出牌","uses":1,"imageUrl":"⏭️","rarity":"rare"},
-    {"id":"gold-equip-06","mode":"gold","type":"equipment","name":"复制","desc":"复制对手刚用的装备卡效果","uses":1,"imageUrl":"📋","rarity":"epic"},
-    {"id":"gold-equip-07","mode":"gold","type":"equipment","name":"提示","desc":"系统提示你哪张牌最该出","uses":2,"imageUrl":"💡","rarity":"common"},
-    {"id":"gold-equip-08","mode":"gold","type":"equipment","name":"重抽","desc":"重新洗牌并重抽你的手牌","uses":1,"imageUrl":"🎲","rarity":"rare"},
-    {"id":"gold-equip-09","mode":"gold","type":"equipment","name":"透视","desc":"看对手所有暗牌","uses":1,"imageUrl":"🔮","rarity":"epic"},
-
-    {"id":"rainbow-skill-01","mode":"rainbow","type":"skill","name":"卓尔不群","desc":"每张牌不一样即可胡牌","uses":0,"imageUrl":"🌈","rarity":"epic"},
-    {"id":"rainbow-skill-02","mode":"rainbow","type":"skill","name":"大师","desc":"你的每张装备卡使用次数 +2","uses":0,"imageUrl":"👑","rarity":"epic"},
-    {"id":"rainbow-skill-03","mode":"rainbow","type":"skill","name":"鸿运当头","desc":"装备卡使用必生效（无视对手技能）","uses":0,"imageUrl":"🍀","rarity":"rare"},
-    {"id":"rainbow-skill-04","mode":"rainbow","type":"skill","name":"一夜暴富","desc":"每用一次装备卡本局 +5 分","uses":0,"imageUrl":"💰","rarity":"epic"},
-    {"id":"rainbow-skill-05","mode":"rainbow","type":"skill","name":"逆转乾坤","desc":"本局最后阶段可强制翻盘（一次）","uses":0,"imageUrl":"🌀","rarity":"epic"},
-    {"id":"rainbow-skill-06","mode":"rainbow","type":"skill","name":"神机妙算","desc":"你的装备卡不消耗次数","uses":0,"imageUrl":"🧠","rarity":"epic"},
-
-    {"id":"rainbow-equip-01","mode":"rainbow","type":"equipment","name":"改命","desc":"重新洗所有人的牌","uses":1,"imageUrl":"⏰","rarity":"epic"},
-    {"id":"rainbow-equip-02","mode":"rainbow","type":"equipment","name":"全知","desc":"看所有人的全部手牌","uses":1,"imageUrl":"👁️‍🗨️","rarity":"epic"},
-    {"id":"rainbow-equip-03","mode":"rainbow","type":"equipment","name":"锁定","desc":"让一个对手跳过本轮","uses":1,"imageUrl":"🔒","rarity":"rare"},
-    {"id":"rainbow-equip-04","mode":"rainbow","type":"equipment","name":"召唤","desc":"从牌墙选任意一张牌加入手牌","uses":1,"imageUrl":"✨","rarity":"epic"},
-    {"id":"rainbow-equip-05","mode":"rainbow","type":"equipment","name":"时光倒流","desc":"撤回本轮已出的所有操作","uses":1,"imageUrl":"⌛","rarity":"epic"},
-    {"id":"rainbow-equip-06","mode":"rainbow","type":"equipment","name":"命运之轮","desc":"随机获得一张稀有牌","uses":1,"imageUrl":"🎡","rarity":"rare"},
-    {"id":"rainbow-equip-07","mode":"rainbow","type":"equipment","name":"换位","desc":"和一个对手交换一张手牌","uses":1,"imageUrl":"🔀","rarity":"rare"},
-    {"id":"rainbow-equip-08","mode":"rainbow","type":"equipment","name":"加倍","desc":"本局你的得分翻倍","uses":1,"imageUrl":"✖️","rarity":"rare"},
-    {"id":"rainbow-equip-09","mode":"rainbow","type":"equipment","name":"终结","desc":"立刻宣布胡牌（无视牌型）","uses":1,"imageUrl":"💥","rarity":"epic"}
+    {
+      "id": "prismatic-skill-01",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "就是爱吃",
+      "desc": "可以吃全场。限制:只能胡清一色",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-02",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "十三烂狂",
+      "desc": "你的十三烂可以吃牌(例:14可吃789)",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-03",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "平胡之魂",
+      "desc": "你的平胡额外加5分。限制:本局你只能胡点炮。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-04",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "天命冲关",
+      "desc": "手上牌型能胡到3分及以上，听牌时下一次摸牌符合胡牌的花色则自动胡牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-05",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "绝对领域",
+      "desc": "你打的牌别人不能吃碰杠。限制:不胡点炮。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-06",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "时空回溯",
+      "desc": "被点炮可撤回重打1次。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-07",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "四面楚歌",
+      "desc": "吃碰四组后，单吊胡牌算做一次自摸",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-08",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "同生共死",
+      "desc": "绑定一人，利益损失均摊。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-09",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "全员静默",
+      "desc": "全场禁止吃碰杠。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-10",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "半场跑路",
+      "desc": "可以放弃本场胡牌，不用付钱。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-11",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "十三烂",
+      "desc": "十三烂允许带一对。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-12",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "斗转星移",
+      "desc": "有人自摸时，你可以强行判定该牌为你自摸。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-13",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "强制交换",
+      "desc": "本局可以跟任意一名对手强制交换3张手牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-14",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "杠上开花",
+      "desc": "如果你通过杠上开花胡牌，所有对手需支付5倍分数",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-15",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "全球人挑战",
+      "desc": "如果你最后只剩一张手牌胡牌，分数番4倍",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-16",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "秩序维护",
+      "desc": "如果你本局不吃，碰，杠，分数番3倍",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-17",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "超级全球人",
+      "desc": "只剩一张牌时，全程打出的任何牌都视为胡",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-18",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "来波大的",
+      "desc": "你的平胡可以番一张牌库，分数为花色的点数，字和补花统一为5分",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-19",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "19海底主宰",
+      "desc": "进入海底环节，你可以直接胡牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-20",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "秦始皇",
+      "desc": "你胡的牌型番4倍",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-21",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "时光倒流",
+      "desc": "每局有3次机会，撤回你上一张打出的牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-22",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "万能杠",
+      "desc": "可以用手中任意三张牌进行假杠，限制没有杠钱不能胡18罗汉",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-23",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "猎杀时刻",
+      "desc": "开启点炮胡，若点炮得分番2倍,若自摸得分番4倍",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-24",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "弃牌利用",
+      "desc": "放弃一次摸牌，将弃牌堆的一张牌拿回手（限3次）",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-25",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "不朽",
+      "desc": "别人自摸时你不扣分",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-26",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "幻影",
+      "desc": "本局有一次机会，将自己打出的3张弃牌与手中3张互换",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-27",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "大天命",
+      "desc": "起手4张相同字牌，直接宣告胜利，胡牌分数为10",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-28",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "小天命",
+      "desc": "起手4张补花牌，直接宣告胜利，胡牌分数为5",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-29",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "贪婪",
+      "desc": "本局你每开一个杠，你胡牌时结算加一倍",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-30",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "强行截止",
+      "desc": "任意一名玩家碰牌后，你可以用手中的对子“截住”该牌并强行碰牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-31",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "不破不立",
+      "desc": "只有在牌墙最后18张时，全场才能胡平胡",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-32",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "血流不止",
+      "desc": "你胡牌后进入血流状态可以继续摸牌打牌，你每次胡额外加2分",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-33",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "幺九神教",
+      "desc": "你的1，9筒可以视为万能牌（胡十三幺分数减半）",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-34",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "全场换牌（单次）",
+      "desc": "强制四人顺时针每人互换一张手牌，可以在玩家胡牌时使用",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-35",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "绝地翻盘（单次）",
+      "desc": "牌墙剩余10张牌时，可一次性多摸3张牌挑选手牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-36",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "变形重组器（开局单次）",
+      "desc": "开局直接丢掉手里任意张牌，重新摸替换",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-37",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "万能风牌",
+      "desc": "手中的风牌可以作为任意花色来组成顺子。（可以胡九联宝灯分数+6，但是不能组成111或者999）",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-38",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "红中万能",
+      "desc": "你的红中作为万能牌（胡十三幺分数减半）",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-39",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "吉星之冕",
+      "desc": "你的发财作为万能牌（胡十三幺分数减半）",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-40",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "变废为宝",
+      "desc": "开局可以丢弃你的字牌，丢几张模几张",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-41",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "炼狱契约",
+      "desc": "你每隔两轮可以模两张弃两张，牌型不能有字牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-42",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "开摆",
+      "desc": "强制每两回不能摸牌，第三回合摸三张",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-43",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "啪-砰",
+      "desc": "每次碰/杠，可以摸一张牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-44",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "买一送一",
+      "desc": "当你拿到风牌时，如牌堆中有则可以拿一张",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-45",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "拿来吧你",
+      "desc": "场上有人打出中发白（碰或杠），都可以强制跟人家替换。限制：你胡的牌型必须有中发白，固定分数为5你未胡牌额外付5分。",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-46",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "恶魔契约",
+      "desc": "你胡的牌型只能为一种花色，每轮摸两张",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-47",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "护卫之力",
+      "desc": "你不受任何海克斯效果",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-48",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "来个好伙计",
+      "desc": "听牌时，其他人每人亮出一张牌，如果是你胡的牌，那你可以直接胡",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-49",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "纯坏种",
+      "desc": "在其他玩家吃/碰/杠，可以用手牌替换其中的一张牌",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-50",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "十三幺之力",
+      "desc": "你的十三幺牌型中可以用两张多余的字牌来用作万能牌，只能自摸",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "prismatic-skill-51",
+      "mode": "prismatic",
+      "type": "skill",
+      "name": "观星",
+      "desc": "你的阶段随时可以查看牌墙最上方即将摸到的3张牌，并选择其中一张，其他两张位置可以调回牌底",
+      "uses": 0,
+      "imageUrl": "🌈",
+      "rarity": "epic"
+    },
+    {
+      "id": "gold-skill-01",
+      "mode": "gold",
+      "type": "skill",
+      "name": "最后储备",
+      "desc": "在你听牌后可以连摸三张牌",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-02",
+      "mode": "gold",
+      "type": "skill",
+      "name": "卓尔不群",
+      "desc": "当你所有的牌都不一样时可以和牌，但不能包含字牌",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-03",
+      "mode": "gold",
+      "type": "skill",
+      "name": "在失败中变强",
+      "desc": "你被碰时可以模一张弃一张，被杠时可以模两张弃两张",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-04",
+      "mode": "gold",
+      "type": "skill",
+      "name": "好运连连",
+      "desc": "当你模到和上家打出同色的牌时，可以在模一张，不可以连续触发",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-05",
+      "mode": "gold",
+      "type": "skill",
+      "name": "走捷径",
+      "desc": "你模牌改为从牌尾模",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-06",
+      "mode": "gold",
+      "type": "skill",
+      "name": "了解你的敌人",
+      "desc": "所有玩家明牌进行游戏",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-07",
+      "mode": "gold",
+      "type": "skill",
+      "name": "吃饱喝好",
+      "desc": "其他人在吃牌时，你可以抽取他的一张牌并给他一张",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-08",
+      "mode": "gold",
+      "type": "skill",
+      "name": "打捞桶（单次）",
+      "desc": "摸牌阶段可以从弃牌选择一张",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-09",
+      "mode": "gold",
+      "type": "skill",
+      "name": "行家里手",
+      "desc": "开局选择一个玩家抽取他三张手牌并还他三张",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-10",
+      "mode": "gold",
+      "type": "skill",
+      "name": "单吊之王",
+      "desc": "若胡牌时是\"单吊一只\"的听牌型，胡牌分数翻倍。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-11",
+      "mode": "gold",
+      "type": "skill",
+      "name": "黄金右手",
+      "desc": "本局你每轮摸牌时，可以摸二选一(摸二选一回底)。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-12",
+      "mode": "gold",
+      "type": "skill",
+      "name": "自摸豁免",
+      "desc": "如果别人自摸胡牌，你无需支付分值，由另外两名输家代付。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-13",
+      "mode": "gold",
+      "type": "skill",
+      "name": "禁区锁定",
+      "desc": "指定一对手，他出的牌你都能吃/碰，但你出的牌他不能。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-14",
+      "mode": "gold",
+      "type": "skill",
+      "name": "恶意干扰",
+      "desc": "黄金在本局中，你可以强制让一名对手跳过一圈。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-15",
+      "mode": "gold",
+      "type": "skill",
+      "name": "明牌博弈",
+      "desc": "你可以选择明牌打，作为交换，你胡牌时的分数翻3倍。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-16",
+      "mode": "gold",
+      "type": "skill",
+      "name": "双龙汇",
+      "desc": "两队完全一样的顺子分数加3",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-17",
+      "mode": "gold",
+      "type": "skill",
+      "name": "三刻字",
+      "desc": "胡牌包括条筒万一样的顺子，分数加5",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-18",
+      "mode": "gold",
+      "type": "skill",
+      "name": "暗刻",
+      "desc": "胡牌含自己摸成的刻子（不碰不杠能吃）额外加2分",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-19",
+      "mode": "gold",
+      "type": "skill",
+      "name": "不拘一格",
+      "desc": "每当有人碰牌时，接下来你的一回合，你可以放弃摸牌，从牌堆中拿一张牌。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-20",
+      "mode": "gold",
+      "type": "skill",
+      "name": "混搭艺术",
+      "desc": "万能吃(万子吃筒子等)但只能平胡",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-21",
+      "mode": "gold",
+      "type": "skill",
+      "name": "深度博弈",
+      "desc": "听牌后可将2张手牌与牌墙最后2张牌互换。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-22",
+      "mode": "gold",
+      "type": "skill",
+      "name": "拒绝陪跑",
+      "desc": "若你是庄家，有人胡你，你只付一半。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-23",
+      "mode": "gold",
+      "type": "skill",
+      "name": "预支幸运",
+      "desc": "开局前可以先摸两张牌再开始补花。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-24",
+      "mode": "gold",
+      "type": "skill",
+      "name": "野杠",
+      "desc": "任意三张字牌即可执行杠动作。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-25",
+      "mode": "gold",
+      "type": "skill",
+      "name": "暗杠之神",
+      "desc": "你的暗杠得分翻三倍，且自摸按杠开算。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-26",
+      "mode": "gold",
+      "type": "skill",
+      "name": "杠爆大师",
+      "desc": "达成杠爆后，你本局赢的所有分翻倍。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-27",
+      "mode": "gold",
+      "type": "skill",
+      "name": "钱塘潮汐",
+      "desc": "牌墙剩最后20张时，你的所有胡牌番数x2。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-28",
+      "mode": "gold",
+      "type": "skill",
+      "name": "防守大师",
+      "desc": "本局你支付的分数减半。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-29",
+      "mode": "gold",
+      "type": "skill",
+      "name": "苏堤春晓",
+      "desc": "你的顺子包含123、456、789时，胡牌番数x2。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-30",
+      "mode": "gold",
+      "type": "skill",
+      "name": "清一色大师",
+      "desc": "清一色胡牌时，番数从3番提升至5番。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-31",
+      "mode": "gold",
+      "type": "skill",
+      "name": "龙七对觉醒",
+      "desc": "你的七对胡牌加2分，龙七对胡牌+3分",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-32",
+      "mode": "gold",
+      "type": "skill",
+      "name": "明杠加速",
+      "desc": "你明杠后，下一次摸牌可以从牌墙顶前3张中选1张。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-33",
+      "mode": "gold",
+      "type": "skill",
+      "name": "一气通贯",
+      "desc": "胡牌含同花色 123456789完整顺子，额外+2分。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-34",
+      "mode": "gold",
+      "type": "skill",
+      "name": "一色三同顺",
+      "desc": "胡牌含同花色三组相同数字的顺子，额外+2分。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-35",
+      "mode": "gold",
+      "type": "skill",
+      "name": "一色三节高",
+      "desc": "胡牌含同花色三组递增的刻子，额外+3分。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-36",
+      "mode": "gold",
+      "type": "skill",
+      "name": "点炮狂热",
+      "desc": "豁免点炮单赔限制，你若点炮胡，结算分由场上三家共同分",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-37",
+      "mode": "gold",
+      "type": "skill",
+      "name": "对对更对",
+      "desc": "对对胡(碰碰胡)的结算倍番3倍",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-38",
+      "mode": "gold",
+      "type": "skill",
+      "name": "庄家威严",
+      "desc": "你坐庄胡牌时，在原有结算基础上额外再翻一倍。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-39",
+      "mode": "gold",
+      "type": "skill",
+      "name": "换牌许可",
+      "desc": "开局前，可以选择从牌墙最末尾更换3张手牌。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-40",
+      "mode": "gold",
+      "type": "skill",
+      "name": "全求人光环",
+      "desc": "进入全求人状态胡牌时，所有对手支付双倍倍率。",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-41",
+      "mode": "gold",
+      "type": "skill",
+      "name": "双城赏金",
+      "desc": "自摸时额外+2分，放炮时额外付2分",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-42",
+      "mode": "gold",
+      "type": "skill",
+      "name": "进化刻子",
+      "desc": "你手中三张相同的刻字每组额外加1分",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-43",
+      "mode": "gold",
+      "type": "skill",
+      "name": "幻化",
+      "desc": "可以跨花吃/碰",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "gold-skill-44",
+      "mode": "gold",
+      "type": "skill",
+      "name": "我不识字",
+      "desc": "胡牌时不能带字牌，只要打出字牌时，可以一直模打",
+      "uses": 0,
+      "imageUrl": "🎴",
+      "rarity": "rare"
+    },
+    {
+      "id": "silver-skill-01",
+      "mode": "silver",
+      "type": "skill",
+      "name": "冒险举动",
+      "desc": "你直接名牌，每隔一轮摸牌时模两张打两张",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-02",
+      "mode": "silver",
+      "type": "skill",
+      "name": "分享及时关心",
+      "desc": "每次你碰/杠或者被碰/杠时你和对方额外模一张牌",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-03",
+      "mode": "silver",
+      "type": "skill",
+      "name": "摸牌好手",
+      "desc": "自己杠牌后额外多摸1张牌",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-04",
+      "mode": "silver",
+      "type": "skill",
+      "name": "慢速听牌",
+      "desc": "听牌那一刻，可以替换手里一张废牌",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-05",
+      "mode": "silver",
+      "type": "skill",
+      "name": "风牌加成",
+      "desc": "手里带风牌胡牌，额外加一番",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-06",
+      "mode": "silver",
+      "type": "skill",
+      "name": "终极防御",
+      "desc": "若你处于听牌位，点炮给出的分值固定为1分。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-07",
+      "mode": "silver",
+      "type": "skill",
+      "name": "够朋友",
+      "desc": "点炮时，由你的上家替你支付50%的金币。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-08",
+      "mode": "silver",
+      "type": "skill",
+      "name": "自摸达人",
+      "desc": "若本局自摸胡牌，每位对手需额外多支付2分。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-09",
+      "mode": "silver",
+      "type": "skill",
+      "name": "点炮双响",
+      "desc": "如果你胡的是点炮，点炮者需支付2倍的分数。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-10",
+      "mode": "silver",
+      "type": "skill",
+      "name": "幺九奖金",
+      "desc": "胡牌时，你的牌型里每带有一个1或9，额外得1分。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-11",
+      "mode": "silver",
+      "type": "skill",
+      "name": "碰碰发财",
+      "desc": "胡牌时牌中每有一组刻子，额外加1分。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-12",
+      "mode": "silver",
+      "type": "skill",
+      "name": "和平使者",
+      "desc": "若本局以\"平胡\"胡牌，得分翻倍。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-13",
+      "mode": "silver",
+      "type": "skill",
+      "name": "开局洗牌",
+      "desc": "发完初始牌后，可以将最多3张不想要的手牌换掉。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-14",
+      "mode": "silver",
+      "type": "skill",
+      "name": "双倍补花",
+      "desc": "白银通用型如果你抓到花牌，可以连摸两张补牌，多余牌弃掉。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-15",
+      "mode": "silver",
+      "type": "skill",
+      "name": "以和为贵",
+      "desc": "别人胡牌，你不用付胡数分。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-16",
+      "mode": "silver",
+      "type": "skill",
+      "name": "赢庄专家",
+      "desc": "闲家胡庄家额外得3分。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    },
+    {
+      "id": "silver-skill-17",
+      "mode": "silver",
+      "type": "skill",
+      "name": "见好就收",
+      "desc": "自摸分减半，点炮分加倍。",
+      "uses": 0,
+      "imageUrl": "🥈",
+      "rarity": "common"
+    }
   ]
 }

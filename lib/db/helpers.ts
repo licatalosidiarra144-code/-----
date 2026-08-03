@@ -156,6 +156,15 @@ export const realDb = {
         .returning();
       return r[0];
     },
+    updateOffer: async (id: number, cardIds: string[], rerollsUsed: number) => {
+      if (!db) return null;
+      const r = await db
+        .update(schema.cardDraws)
+        .set({ cardIds, rerollsUsed })
+        .where(eq(schema.cardDraws.id, id))
+        .returning();
+      return r[0];
+    },
   },
 };
 

@@ -1,8 +1,8 @@
-// 房主开始游戏：随机选模式 + 给每人发技能卡
+// 房主开始游戏：按概率选局型 + 给每人发技能卡（4 选 1）
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, cardDraws } from '@/lib/db/helpers';
-import { drawCards, getCardsByMode, CardType } from '@/lib/cards';
+import { drawCards, getCardsByMode, pickGameMode } from '@/lib/cards';
 import { getPlayerSession } from '@/lib/session';
 
 export async function POST(
@@ -12,7 +12,6 @@ export async function POST(
   try {
     const { roomId: roomCode } = await params;
 
-    // 身份校验：从 cookie 读，且必须是本房间的房主
     const session = await getPlayerSession();
     if (!session || session.roomCode !== roomCode) {
       return NextResponse.json({ error: '请先加入房间' }, { status: 401 });
@@ -37,8 +36,7 @@ export async function POST(
       );
     }
 
-    // 随机选模式：金 or 彩
-    const mode = Math.random() < 0.5 ? 'gold' : 'rainbow';
+    const mode = pickGameMode();
     const newRound = room.round + 1;
 
     await rooms.update(room.id, {
@@ -47,8 +45,7 @@ export async function POST(
       round: newRound,
     });
 
-    // 给每人抽 4 张技能卡
-    const skillPool = getCardsByMode(mode, 'skill' as CardType);
+    const skillPool = getCardsByMode(mode, 'skill');
     for (const p of players) {
       const cards = drawCards(skillPool, 4);
       await cardDraws.create({
@@ -57,6 +54,7 @@ export async function POST(
         round: newRound,
         drawType: 'skill',
         cardIds: cards.map((c) => c.id),
+        rerollsUsed: 0,
       });
     }
 

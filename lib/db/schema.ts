@@ -4,14 +4,13 @@
 //
 // 数据生命周期：
 // - 房间是临时的，4 人游戏结束后可以解散
-// - 卡牌库是固定的（30 张），不存数据库，写在 lib/cards 下面
+// - 卡牌库固定在 data/cards.json，不存数据库
 // ============================================
 
 import {
   pgTable,
   serial,
   varchar,
-  text,
   timestamp,
   jsonb,
   integer,
@@ -24,18 +23,17 @@ export const rooms = pgTable(
   'rooms',
   {
     id: serial('id').primaryKey(),
-    // 6 位数字房间码，例如 "A3F7K2"，用户扫码或输入进房
+    // 6 位房间码，例如 "A3F7K2"，用户扫码或输入进房
     code: varchar('code', { length: 8 }).notNull().unique(),
     // 房主 user_id（创建房间的人）
     ownerId: varchar('owner_id', { length: 64 }).notNull(),
     // 房间状态
     // 'waiting' = 等人阶段
-    // 'skill_picking' = 抽技能卡中
-    // 'equipment_picking' = 抽装备卡中
-    // 'playing' = 展示 + 装备使用阶段
+    // 'skill_picking' = 抽技能卡中（4 选 1，可重选 1 次）
+    // 'playing' = 展示技能卡（桌面执行效果）
     // 'finished' = 房间结束
     status: varchar('status', { length: 20 }).default('waiting').notNull(),
-    // 当前局：'gold'（金）| 'rainbow'（彩）
+    // 当前局：'silver' | 'prismatic' | 'gold'
     currentMode: varchar('current_mode', { length: 20 }),
     // 局数（从 1 开始）
     round: integer('round').default(0).notNull(),
@@ -66,8 +64,8 @@ export const roomPlayers = pgTable(
 );
 
 // ---------- 玩家选的卡 ----------
-// 每局每个玩家会选：1 张技能卡 + 3 张装备卡
-// cardId 引用 lib/cards 里的卡 ID（字符串，如 "gold-skill-001"）
+// 每局每个玩家选 1 张技能卡
+// cardId 引用 data/cards.json 里的卡 ID（如 "gold-skill-01"）
 export const playerCards = pgTable(
   'player_cards',
   {
@@ -75,12 +73,11 @@ export const playerCards = pgTable(
     roomId: integer('room_id').references(() => rooms.id).notNull(),
     playerId: integer('player_id').references(() => roomPlayers.id).notNull(),
     round: integer('round').notNull(), // 第几局
-    // 'skill' | 'equipment'
+    // 现仅为 'skill'（保留字段兼容旧数据）
     cardType: varchar('card_type', { length: 20 }).notNull(),
     // 卡 ID（对应 lib/cards 里的 id）
     cardId: varchar('card_id', { length: 64 }).notNull(),
-    // 装备卡的剩余使用次数
-    // 技能卡永远是 0（用不到这个字段）
+    // 技能卡不做次数，恒为 0（保留字段兼容旧数据）
     remainingUses: integer('remaining_uses').default(0).notNull(),
   },
   (t) => ({
@@ -89,8 +86,7 @@ export const playerCards = pgTable(
 );
 
 // ---------- 抽卡池快照 ----------
-// 每局开始时给每个玩家发的卡（4 张技能卡选 1，5 张装备卡选 3）
-// 存下来是为了"展示阶段"让玩家看到自己选过什么
+// 每局开始时给每个玩家发 4 张技能卡（4 选 1，可重选 1 次）
 export const cardDraws = pgTable(
   'card_draws',
   {
@@ -98,13 +94,14 @@ export const cardDraws = pgTable(
     roomId: integer('room_id').references(() => rooms.id).notNull(),
     playerId: integer('player_id').references(() => roomPlayers.id).notNull(),
     round: integer('round').notNull(),
-    // 抽卡类型：'skill' | 'equipment'
+    // 现仅为 'skill'
     drawType: varchar('draw_type', { length: 20 }).notNull(),
     // 抽到的卡 ID 列表（JSON 数组）
-    // 例如 ["gold-skill-001", "gold-skill-003", "gold-skill-005", "gold-skill-008"]
     cardIds: jsonb('card_ids').$type<string[]>().notNull(),
     // 玩家选中的卡 ID（抽出后，玩家还没选时为 null）
     selectedCardId: varchar('selected_card_id', { length: 64 }),
+    // 本局已用重选次数（最多 1）
+    rerollsUsed: integer('rerolls_used').default(0).notNull(),
   },
   (t) => ({
     playerIdx: index('card_draws_player_idx').on(t.playerId, t.round),

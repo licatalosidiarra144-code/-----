@@ -1,8 +1,8 @@
-// 房主开下一局：room.round + 1，重新抽技能卡
+// 房主开下一局：重新抽局型 + 发技能卡
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, cardDraws } from '@/lib/db/helpers';
-import { getCardsByMode, drawCards, CardType } from '@/lib/cards';
+import { getCardsByMode, drawCards, pickGameMode } from '@/lib/cards';
 import { getPlayerSession } from '@/lib/session';
 
 export async function POST(
@@ -24,7 +24,7 @@ export async function POST(
     if (!room) return NextResponse.json({ error: '房间不存在' }, { status: 404 });
 
     const newRound = room.round + 1;
-    const mode = Math.random() < 0.5 ? 'gold' : 'rainbow';
+    const mode = pickGameMode();
 
     await rooms.update(room.id, {
       status: 'skill_picking',
@@ -33,7 +33,7 @@ export async function POST(
     });
 
     const players = await roomPlayers.listByRoom(room.id);
-    const skillPool = getCardsByMode(mode, 'skill' as CardType);
+    const skillPool = getCardsByMode(mode, 'skill');
     for (const p of players) {
       const cards = drawCards(skillPool, 4);
       await cardDraws.create({
@@ -42,6 +42,7 @@ export async function POST(
         round: newRound,
         drawType: 'skill',
         cardIds: cards.map((c) => c.id),
+        rerollsUsed: 0,
       });
     }
 

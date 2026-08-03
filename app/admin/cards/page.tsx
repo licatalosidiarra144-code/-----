@@ -4,14 +4,16 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/utils';
+import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
 
-// ============================================// 卡牌管理后台：增删改 30 张卡
+// ============================================
+// 卡牌管理后台：增删改技能卡
 // 数据存在 data/cards.json
 // 访问需要 ADMIN_PASSWORD（存在 localStorage）
 // ============================================
 
-type CardType = 'skill' | 'equipment';
-type Mode = 'gold' | 'rainbow';
+type CardType = 'skill';
+type Mode = 'silver' | 'prismatic' | 'gold';
 type Rarity = 'common' | 'rare' | 'epic';
 
 interface Card {
@@ -42,10 +44,13 @@ const PASS_KEY = 'mj_admin_pass';
 function DarkBackground() {
   return (
     <>
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950" />
-      <div className="pointer-events-none fixed top-1/4 left-1/4 -z-10 h-96 w-96 rounded-full bg-purple-600/20 blur-3xl" />
-      <div className="pointer-events-none fixed bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
-      <div className="pointer-events-none fixed top-1/2 left-1/2 -z-10 h-96 w-96 rounded-full bg-pink-600/15 blur-3xl" />
+      {/* 流动曲线（两层反向） */}
+      <div className="pointer-events-none fixed inset-0 z-0 text-white/50">
+        <FloatingPaths position={1} />
+        <FloatingPaths position={-1} />
+      </div>
+      {/* 底色兜底（防止透明区） */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
     </>
   );
 }
@@ -149,7 +154,7 @@ export default function AdminCardsPage() {
         <div className="mx-auto max-w-md px-4 py-16">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
             <h1 className="mb-2 text-2xl font-bold text-white">🛠️ 卡牌管理后台</h1>
-            <p className="mb-6 text-sm text-white/50">
+            <p className="mb-6 text-sm text-white/65">
               请输入管理员密码（.env 里的 ADMIN_PASSWORD）
             </p>
             <input
@@ -168,7 +173,7 @@ export default function AdminCardsPage() {
               进入后台
             </Button>
             <div className="mt-4 text-center">
-              <Link href="/" className="text-xs text-white/40 hover:text-white/70">
+              <Link href="/" className="text-xs text-white/55 hover:text-white/85">
                 ← 回首页
               </Link>
             </div>
@@ -180,10 +185,9 @@ export default function AdminCardsPage() {
 
   // ---- 已登录：显示卡牌管理界面 ----
   const groups: { label: string; mode: Mode; type: CardType }[] = [
-    { label: '🎴 金局 · 技能卡', mode: 'gold', type: 'skill' },
-    { label: '🛠️ 金局 · 装备卡', mode: 'gold', type: 'equipment' },
-    { label: '🌈 彩局 · 技能卡', mode: 'rainbow', type: 'skill' },
-    { label: '💥 彩局 · 装备卡', mode: 'rainbow', type: 'equipment' },
+    { label: '🥈 白银局 · 技能卡', mode: 'silver', type: 'skill' },
+    { label: '🌈 棱彩局 · 技能卡', mode: 'prismatic', type: 'skill' },
+    { label: '🎴 黄金局 · 技能卡', mode: 'gold', type: 'skill' },
   ];
 
   return (
@@ -195,7 +199,7 @@ export default function AdminCardsPage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">🛠️ 卡牌管理</h1>
-            <p className="mt-1 text-sm text-white/50">
+            <p className="mt-1 text-sm text-white/65">
               编辑 data/cards.json · 改完点保存即可生效
             </p>
           </div>
@@ -222,7 +226,7 @@ export default function AdminCardsPage() {
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-white/50">加载中…</div>
+          <div className="py-12 text-center text-white/65">加载中…</div>
         ) : (
           <div className="space-y-8">
             {groups.map((g) => {
@@ -231,12 +235,12 @@ export default function AdminCardsPage() {
                 <section key={g.label}>
                   <h2 className="mb-3 text-lg font-semibold text-white/90">
                     {g.label}
-                    <span className="ml-2 text-sm font-normal text-white/40">
+                    <span className="ml-2 text-sm font-normal text-white/55">
                       ({list.length} 张)
                     </span>
                   </h2>
                   {list.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-white/20 bg-white/5 px-4 py-8 text-center text-sm text-white/40 backdrop-blur-sm">
+                    <div className="rounded-lg border border-dashed border-white/20 bg-white/5 px-4 py-8 text-center text-sm text-white/55 backdrop-blur-sm">
                       这组还没卡，点右上"新建卡牌"加一张
                     </div>
                   ) : (
@@ -306,11 +310,6 @@ function CardRow({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <div className="truncate font-bold text-white">{card.name}</div>
-            {card.type === 'equipment' && (
-              <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-xs text-orange-300">
-                ×{card.uses}
-              </span>
-            )}
             {card.rarity === 'rare' && (
               <span className="text-xs text-cyan-300">稀有</span>
             )}
@@ -318,8 +317,8 @@ function CardRow({
               <span className="text-xs text-fuchsia-300">史诗</span>
             )}
           </div>
-          <div className="mt-1 text-xs font-mono text-white/40">{card.id}</div>
-          <div className="mt-1 line-clamp-2 text-sm text-white/60">{card.desc}</div>
+          <div className="mt-1 text-xs font-mono text-white/55">{card.id}</div>
+          <div className="mt-1 line-clamp-2 text-sm text-white/65">{card.desc}</div>
         </div>
       </div>
       <div className="mt-3 flex gap-2">
@@ -376,24 +375,26 @@ function CardEditor({
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="金/彩局">
+            <Field label="局型">
               <select
                 value={card.mode}
                 onChange={(e) => onChange({ ...card, mode: e.target.value as Mode })}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-400 focus:outline-none"
               >
-                <option value="gold" className="bg-slate-900">🎴 金局</option>
-                <option value="rainbow" className="bg-slate-900">🌈 彩局</option>
+                <option value="silver" className="bg-slate-900">🥈 白银局</option>
+                <option value="prismatic" className="bg-slate-900">🌈 棱彩局</option>
+                <option value="gold" className="bg-slate-900">🎴 黄金局</option>
               </select>
             </Field>
-            <Field label="类型">
+            <Field label="稀有度">
               <select
-                value={card.type}
-                onChange={(e) => onChange({ ...card, type: e.target.value as CardType })}
+                value={card.rarity || 'common'}
+                onChange={(e) => onChange({ ...card, rarity: e.target.value as Rarity })}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-400 focus:outline-none"
               >
-                <option value="skill" className="bg-slate-900">技能卡</option>
-                <option value="equipment" className="bg-slate-900">装备卡</option>
+                <option value="common" className="bg-slate-900">普通</option>
+                <option value="rare" className="bg-slate-900">稀有</option>
+                <option value="epic" className="bg-slate-900">史诗</option>
               </select>
             </Field>
           </div>
@@ -416,38 +417,15 @@ function CardEditor({
             />
           </Field>
 
-          <div className="grid grid-cols-3 gap-3">
-            <Field label="emoji / 图">
-              <input
-                type="text"
-                value={card.imageUrl}
-                onChange={(e) => onChange({ ...card, imageUrl: e.target.value })}
-                maxLength={4}
-                className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-center text-2xl focus:border-pink-400 focus:outline-none"
-              />
-            </Field>
-            <Field label="使用次数">
-              <input
-                type="number"
-                min={0}
-                max={99}
-                value={card.uses}
-                onChange={(e) => onChange({ ...card, uses: Number(e.target.value) })}
-                className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-400 focus:outline-none"
-              />
-            </Field>
-            <Field label="稀有度">
-              <select
-                value={card.rarity || 'common'}
-                onChange={(e) => onChange({ ...card, rarity: e.target.value as Rarity })}
-                className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-400 focus:outline-none"
-              >
-                <option value="common" className="bg-slate-900">普通</option>
-                <option value="rare" className="bg-slate-900">稀有</option>
-                <option value="epic" className="bg-slate-900">史诗</option>
-              </select>
-            </Field>
-          </div>
+          <Field label="emoji / 图">
+            <input
+              type="text"
+              value={card.imageUrl}
+              onChange={(e) => onChange({ ...card, imageUrl: e.target.value })}
+              maxLength={4}
+              className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-center text-2xl focus:border-pink-400 focus:outline-none"
+            />
+          </Field>
         </div>
 
         <div className="mt-6 flex justify-end gap-2">
