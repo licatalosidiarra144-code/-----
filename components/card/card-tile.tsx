@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/components/utils';
-import type { Card } from '@/lib/cards';
+import type { Card } from '@/lib/cards/types';
 
 const RARITY_STYLE: Record<string, string> = {
   common: 'from-slate-100 to-slate-200 border-slate-300',

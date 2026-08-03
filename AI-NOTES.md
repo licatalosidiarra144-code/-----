@@ -18,6 +18,7 @@
 - 流程：`waiting → skill_picking → playing`
 - 抽选：4 选 1，每人每局可 `skill-reroll` **1 次**（允许与上一轮重复）
 - 卡库：`data/cards.json`（按《抽牌规则》导入，后台可改）
+- **客户端不要从 `@/lib/cards` 引入值**（该文件用了 `fs`）；类型/文案用 `@/lib/cards/types`
 
 ## PostgreSQL 迁移（生产）
 

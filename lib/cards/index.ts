@@ -1,32 +1,17 @@
 // ============================================
-// 卡牌数据 · 从 data/cards.json 加载
+// 卡牌数据 · 从 data/cards.json 加载（仅服务端）
 // ============================================
 //
 // 编辑卡牌：改 data/cards.json 即可，无需改代码。
 // 管理界面：访问 /admin/cards 增删改。
+// 客户端请从 `@/lib/cards/types` 引入类型与 MODE_LABELS。
 
 import fs from 'fs';
 import path from 'path';
+import type { Card, CardType, GameMode } from './types';
 
-export type CardType = 'skill';
-export type GameMode = 'silver' | 'prismatic' | 'gold';
-
-export interface Card {
-  id: string;
-  mode: GameMode;
-  type: CardType;
-  name: string;
-  desc: string;
-  uses: number; // 技能卡一律 0，不做次数
-  imageUrl: string;
-  rarity?: 'common' | 'rare' | 'epic';
-}
-
-export const MODE_LABELS: Record<GameMode, string> = {
-  silver: '白银局',
-  prismatic: '棱彩局',
-  gold: '黄金局',
-};
+export type { Card, CardType, GameMode } from './types';
+export { MODE_LABELS } from './types';
 
 const CARDS_FILE = path.join(process.cwd(), 'data', 'cards.json');
 

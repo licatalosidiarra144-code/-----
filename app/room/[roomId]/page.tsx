@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { CardTile } from '@/components/card/card-tile';
-import { type Card, type GameMode, MODE_LABELS } from '@/lib/cards';
+import { type Card, type GameMode, MODE_LABELS } from '@/lib/cards/types';
 import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
 
 interface Player {
