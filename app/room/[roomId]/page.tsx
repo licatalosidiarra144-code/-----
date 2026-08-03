@@ -88,6 +88,7 @@ function RoomPageInner() {
   const [joinNick, setJoinNick] = useState('');
   const [joinErr, setJoinErr] = useState('');
   const [joinLoading, setJoinLoading] = useState(false);
+  const [codeCopied, setCodeCopied] = useState(false);
 
   useEffect(() => {
     if (joinFlag && !me) setJoinOpen(true);
@@ -213,6 +214,44 @@ function RoomPageInner() {
     }
   }
 
+  /** 手机 / 微信内置浏览器也能用的复制 */
+  async function copyRoomCode(code: string) {
+    const text = code.trim().toUpperCase();
+    let ok = false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      }
+    } catch {
+      ok = false;
+    }
+    if (!ok) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.fontSize = '16px'; // 避免 iOS 缩放
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch {
+        ok = false;
+      }
+    }
+    if (ok) {
+      setCodeCopied(true);
+      window.setTimeout(() => setCodeCopied(false), 2000);
+    } else {
+      window.prompt('复制失败，请长按全选后复制：', text);
+    }
+  }
+
   if (error) {
     return (
       <div className="mx-auto max-w-2xl p-12 text-center">
@@ -297,20 +336,37 @@ function RoomPageInner() {
       <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm text-white/50">房间码</div>
-            <div className="flex items-baseline gap-2">
-              <div className="font-mono text-2xl font-bold text-white drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
+            <div className="text-sm text-white/50">房间码 · 点一下可复制</div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => copyRoomCode(data.room.code)}
+                className="rounded-lg border border-white/20 bg-white/10 px-2.5 py-1 font-mono text-2xl font-bold tracking-widest text-white drop-shadow-[0_0_8px_rgba(244,63,94,0.6)] active:scale-95"
+                aria-label="复制房间码"
+              >
                 {data.room.code}
-              </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => copyRoomCode(data.room.code)}
+                className="rounded-md border border-pink-400/50 bg-pink-500/20 px-2.5 py-1 text-xs font-semibold text-pink-100 active:scale-95"
+              >
+                {codeCopied ? '已复制 ✓' : '复制'}
+              </button>
               {data.room.status === 'waiting' && data.players.length < 4 && (
                 <button
                   onClick={() => setInviteOpen(true)}
-                  className="rounded-md border border-white/20 bg-white/5 px-2 py-0.5 text-xs text-white/80 backdrop-blur-sm hover:border-pink-400 hover:text-pink-300"
+                  className="rounded-md border border-white/20 bg-white/5 px-2 py-1 text-xs text-white/80 backdrop-blur-sm hover:border-pink-400 hover:text-pink-300"
                 >
                   📱 邀请
                 </button>
               )}
             </div>
+            {codeCopied && (
+              <div className="mt-1 text-xs text-emerald-300">
+                已复制，可直接粘贴发微信
+              </div>
+            )}
           </div>
           <div className="text-right">
             <div className="text-sm text-white/50">状态</div>
@@ -493,6 +549,18 @@ function RoomPageInner() {
               </button>
             </div>
             <p className="mb-4 text-sm text-white/50">让好友用浏览器扫这个码进房间</p>
+            <div className="mb-4 flex items-center justify-center gap-2">
+              <span className="font-mono text-xl font-bold tracking-widest text-white">
+                {data.room.code}
+              </span>
+              <button
+                type="button"
+                onClick={() => copyRoomCode(data.room.code)}
+                className="rounded-md border border-pink-400/50 bg-pink-500/20 px-2.5 py-1 text-xs font-semibold text-pink-100"
+              >
+                {codeCopied ? '已复制 ✓' : '复制房间码'}
+              </button>
+            </div>
             <div className="flex justify-center rounded-xl border border-white/10 bg-white p-4">
               <QRCodeSVG
                 value={`${origin}/room/${roomId}?join=1`}
@@ -506,6 +574,13 @@ function RoomPageInner() {
               <div className="break-all font-mono text-left">
                 {`${origin}/room/${roomId}?join=1`}
               </div>
+              <button
+                type="button"
+                onClick={() => copyRoomCode(`${origin}/room/${roomId}?join=1`)}
+                className="mt-2 w-full rounded-md border border-white/20 bg-white/10 py-1.5 text-xs text-white"
+              >
+                {codeCopied ? '已复制 ✓' : '复制链接'}
+              </button>
             </div>
           </div>
         </div>
