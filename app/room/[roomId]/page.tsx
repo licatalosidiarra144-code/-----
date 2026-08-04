@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { CardTile } from '@/components/card/card-tile';
 import { type Card, type GameMode, MODE_LABELS } from '@/lib/cards/types';
 import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
+import { cn } from '@/components/utils';
 
 interface Player {
   id: number;
@@ -321,7 +322,6 @@ function RoomPageInner() {
   }
 
   const myDraw = data.draws[me.id];
-  const mySelectedCards = data.selectedCards[me.id] || [];
   const mySkillSelected = myDraw?.skill?.selectedId;
 
   return (
@@ -488,7 +488,9 @@ function RoomPageInner() {
 
       {data.room.status === 'playing' && (
         <PlayingPhase
-          mySelectedCards={mySelectedCards}
+          meId={me.id}
+          players={data.players}
+          selectedCards={data.selectedCards}
           isOwner={me.isOwner}
           onNextRound={nextRound}
           loading={actionLoading}
@@ -624,8 +626,8 @@ function SkillPickPhase({
       <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
         <p className="mb-2 text-lg font-semibold text-white">✅ 你已选：</p>
         {card && (
-          <div className="flex justify-center">
-            <CardTile card={card} selected disabled />
+          <div className="mx-auto flex max-w-sm justify-center">
+            <CardTile card={card} size="lg" selected disabled />
           </div>
         )}
         <p className="mt-4 text-sm text-white/50">
@@ -644,7 +646,7 @@ function SkillPickPhase({
         本局可重选 1 次
         {canReroll ? '（尚未使用）' : '（已用完）'}
       </p>
-      <div className="mb-6 flex flex-wrap justify-center gap-4">
+      <div className="mb-6 grid grid-cols-2 justify-items-center gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
         {cards.map((c) => (
           <CardTile
             key={c.id}
@@ -668,27 +670,70 @@ function SkillPickPhase({
 }
 
 function PlayingPhase({
-  mySelectedCards,
+  meId,
+  players,
+  selectedCards,
   isOwner,
   onNextRound,
   loading,
 }: {
-  mySelectedCards: Card[];
+  meId: number;
+  players: Player[];
+  selectedCards: Record<number, Card[]>;
   isOwner: boolean;
   onNextRound: () => void;
   loading: boolean;
 }) {
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
-        <h2 className="mb-2 text-center text-xl font-bold text-white">🀄 你的技能卡</h2>
-        <p className="mb-6 text-center text-sm text-white/50">
-          效果在真麻将桌上执行；这里只做展示
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl sm:p-6">
+        <h2 className="mb-1 text-center text-xl font-bold text-white">🀄 本局技能一览</h2>
+        <p className="mb-5 text-center text-sm text-white/50">
+          四人技能卡已全部展示；效果在真麻将桌上执行
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
-          {mySelectedCards.map((c) => (
-            <CardTile key={c.id} card={c} selected disabled />
-          ))}
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {players.map((p, idx) => {
+            const cards = selectedCards[p.id] || [];
+            const isMe = p.id === meId;
+            const grad = PLAYER_GRADIENTS[idx % PLAYER_GRADIENTS.length];
+            return (
+              <div
+                key={p.id}
+                className={cn(
+                  'rounded-2xl border p-3 sm:p-4',
+                  isMe
+                    ? 'border-pink-400/60 bg-pink-500/10'
+                    : 'border-white/10 bg-black/20'
+                )}
+              >
+                <div className="mb-3 flex items-center gap-2">
+                  <div
+                    className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${grad} text-sm font-bold text-white`}
+                  >
+                    {p.nickname[0]}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-semibold text-white">
+                      {p.nickname}
+                      {p.isOwner ? ' 👑' : ''}
+                      {isMe ? '（我）' : ''}
+                    </div>
+                    <div className="text-xs text-white/45">技能卡</div>
+                  </div>
+                </div>
+                {cards.length > 0 ? (
+                  <div className="space-y-2">
+                    {cards.map((c) => (
+                      <CardTile key={c.id} card={c} size="lg" disabled />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-white/45">未选到卡</p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

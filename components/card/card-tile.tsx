@@ -53,10 +53,21 @@ export function CardTile({
   onClick?: () => void;
   badge?: string;
 }) {
+  // 文字优先：图标缩小，描述占主要高度
   const sizeClasses = {
-    sm: 'w-24 h-36 text-xs',
-    md: 'w-32 h-48 text-sm',
-    lg: 'w-40 h-60 text-base',
+    sm: 'w-[7.5rem] min-h-[10.5rem] text-[11px]',
+    md: 'w-[10.5rem] min-h-[15rem] text-sm sm:w-44',
+    lg: 'w-full max-w-sm min-h-[11rem] text-sm',
+  };
+  const emojiClasses = {
+    sm: 'text-xl',
+    md: 'text-2xl',
+    lg: 'text-2xl',
+  };
+  const descClamp = {
+    sm: 'line-clamp-4',
+    md: 'line-clamp-6',
+    lg: 'line-clamp-none',
   };
   const mode = MODE_STYLE[card.mode];
 
@@ -65,40 +76,49 @@ export function CardTile({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'relative flex flex-col items-center justify-between rounded-xl border-2 bg-gradient-to-br p-2 shadow-lg transition-all',
+        'relative flex flex-col rounded-xl border-2 bg-gradient-to-br p-2.5 shadow-lg transition-all',
         mode.tile,
         RARITY_RING[card.rarity || 'common'],
         sizeClasses[size],
-        selected && 'ring-4 ring-rose-500 ring-offset-2 scale-105',
-        !selected && !disabled && 'hover:scale-105 hover:shadow-xl',
+        selected && 'ring-4 ring-rose-500 ring-offset-2 scale-[1.02]',
+        !selected && !disabled && 'hover:scale-[1.02] hover:shadow-xl',
         disabled && 'cursor-not-allowed opacity-60',
         gray && 'grayscale opacity-40',
-        'cursor-pointer'
+        onClick && !disabled ? 'cursor-pointer' : 'cursor-default'
       )}
     >
       {badge && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-red-600 px-2 py-0.5 text-xs text-white">
+        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-red-600 px-2 py-0.5 text-xs text-white">
           {badge}
         </div>
       )}
 
-      <div
-        className={cn(
-          'absolute right-1.5 top-1.5 rounded px-1 py-0.5 text-[9px] font-bold leading-none',
-          mode.chip,
-          mode.chipText
-        )}
-      >
-        {MODE_LABEL[card.mode]}
+      <div className="mb-1.5 flex items-start justify-between gap-1">
+        <div className={cn('shrink-0 leading-none drop-shadow-sm', emojiClasses[size])}>
+          {card.imageUrl}
+        </div>
+        <div
+          className={cn(
+            'rounded px-1 py-0.5 text-[9px] font-bold leading-none',
+            mode.chip,
+            mode.chipText
+          )}
+        >
+          {MODE_LABEL[card.mode]}
+        </div>
       </div>
 
-      <div className="mt-3 flex flex-1 items-center justify-center text-4xl drop-shadow-sm">
-        {card.imageUrl}
-      </div>
-
-      <div className="text-center">
-        <div className="font-bold leading-tight text-gray-900">{card.name}</div>
-        <div className="mt-1 line-clamp-2 text-xs text-gray-700">{card.desc}</div>
+      <div className="min-h-0 flex-1 text-left">
+        <div className="mb-1 font-bold leading-snug text-gray-900">{card.name}</div>
+        <div
+          className={cn(
+            'leading-snug text-gray-800',
+            size === 'lg' ? 'text-sm' : 'text-[11px] sm:text-xs',
+            descClamp[size]
+          )}
+        >
+          {card.desc}
+        </div>
       </div>
     </button>
   );
