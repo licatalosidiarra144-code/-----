@@ -53,20 +53,20 @@ export function CardTile({
   onClick?: () => void;
   badge?: string;
 }) {
-  // 文字优先：图标缩小，描述占主要高度
+  // 文字优先；md 用 w-full 适配手机两列网格，避免固定宽度叠在一起
   const sizeClasses = {
     sm: 'w-[7.5rem] min-h-[10.5rem] text-[11px]',
-    md: 'w-[10.5rem] min-h-[15rem] text-sm sm:w-44',
-    lg: 'w-full max-w-sm min-h-[11rem] text-sm',
+    md: 'w-full min-w-0 min-h-[13.5rem] text-xs',
+    lg: 'w-full max-w-none min-h-[11rem] text-sm',
   };
   const emojiClasses = {
     sm: 'text-xl',
-    md: 'text-2xl',
+    md: 'text-xl',
     lg: 'text-2xl',
   };
   const descClamp = {
     sm: 'line-clamp-4',
-    md: 'line-clamp-6',
+    md: 'line-clamp-5',
     lg: 'line-clamp-none',
   };
   const mode = MODE_STYLE[card.mode];
@@ -76,12 +76,12 @@ export function CardTile({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'relative flex flex-col rounded-xl border-2 bg-gradient-to-br p-2.5 shadow-lg transition-all',
+        'relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-xl border-2 bg-gradient-to-br p-2 shadow-md transition-all sm:p-2.5',
         mode.tile,
         RARITY_RING[card.rarity || 'common'],
         sizeClasses[size],
-        selected && 'ring-4 ring-rose-500 ring-offset-2 scale-[1.02]',
-        !selected && !disabled && 'hover:scale-[1.02] hover:shadow-xl',
+        selected && 'ring-2 ring-rose-500 sm:ring-4',
+        !selected && !disabled && 'active:brightness-95',
         disabled && 'cursor-not-allowed opacity-60',
         gray && 'grayscale opacity-40',
         onClick && !disabled ? 'cursor-pointer' : 'cursor-default'

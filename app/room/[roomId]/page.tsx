@@ -641,14 +641,15 @@ function SkillPickPhase({
         本局可重选 1 次
         {canReroll ? '（尚未使用）' : '（已用完）'}
       </p>
-      <div className="mb-6 grid grid-cols-2 justify-items-center gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
+      <div className="mb-6 grid grid-cols-2 gap-2 sm:gap-3">
         {cards.map((c) => (
-          <CardTile
-            key={c.id}
-            card={c}
-            onClick={() => onPick(c.id)}
-            disabled={loading}
-          />
+          <div key={c.id} className="min-w-0">
+            <CardTile
+              card={c}
+              onClick={() => onPick(c.id)}
+              disabled={loading}
+            />
+          </div>
         ))}
       </div>
       <div className="text-center">
