@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/utils';
-import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
+import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
 
 // ============================================
 // 卡牌管理后台：增删改技能卡
@@ -40,19 +40,8 @@ const EMPTY_CARD: Card = {
 
 const PASS_KEY = 'mj_admin_pass';
 
-// 共享的背景层（在主 return 和密码弹窗里都用）
 function DarkBackground() {
-  return (
-    <>
-      {/* 流动曲线（两层反向） */}
-      <div className="pointer-events-none fixed inset-0 z-0 text-white/50">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
-      </div>
-      {/* 底色兜底（防止透明区） */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
-    </>
-  );
+  return <IrisPetalPageBackground />;
 }
 
 export default function AdminCardsPage() {

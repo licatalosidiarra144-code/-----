@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
+import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
 
 export default function HomePage() {
   const router = useRouter();
@@ -72,16 +72,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-      {/* ===== 流动曲线背景（两层叠加，反向） ===== */}
-      <div className="pointer-events-none fixed inset-0 z-0 text-white/85">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
-      </div>
-      {/* 底色兜底（防止透明区） */}
-      <div className="pointer-events-none fixed inset-0 z-0 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
+    <div className="relative min-h-screen overflow-hidden text-white">
+      <IrisPetalPageBackground />
 
-      <div className="mx-auto max-w-2xl px-4 py-16">
+      <div className="relative mx-auto max-w-2xl px-4 py-16">
         {/* Logo + 标题 */}
         <div className="text-center">
           <div
@@ -187,7 +181,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-8 text-center text-xs text-white/30">
+        <div className="mt-8 text-center text-xs text-white/55">
           线下打麻将用 · 4 人一组 · 实时同步
         </div>
       </div>

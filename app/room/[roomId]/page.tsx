@@ -6,8 +6,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { CardTile } from '@/components/card/card-tile';
 import { type Card, type GameMode, MODE_LABELS } from '@/lib/cards/types';
-import { FloatingPaths } from '@/components/background-paths/FloatingPaths';
 import { cn } from '@/components/utils';
+import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
 
 interface Player {
   id: number;
@@ -326,12 +326,7 @@ function RoomPageInner() {
 
   return (
     <div className="relative mx-auto min-h-screen max-w-5xl px-4 py-8">
-      <div className="pointer-events-none fixed inset-0 z-0 text-white/50">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
-      </div>
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.08),_transparent_60%)]" />
+      <IrisPetalPageBackground />
 
       <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
         <div className="flex items-center justify-between">

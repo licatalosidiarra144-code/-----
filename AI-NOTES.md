@@ -64,34 +64,20 @@ className="bg-white/15!"
 
 ## 背景层
 
-首页 + 管理后台 + 游戏页（`/room/[roomId]`）都用了 `components/background-paths/FloatingPaths.tsx`（来自 `f:\projects\components\background-paths\BackgroundPaths.tsx` 的 `FloatingPaths` 单独导出）。
+首页 + 管理后台 + 游戏页都用 `components/ui/iris-petal.tsx`（[Iris Petal](https://21st.dev/@serafimcloud/components/iris-petal) / Silk Blend）：
+色板 `#1B1035 / #4A3A8C / #B58AC9 / #F5D6E6`，柔焦 + 胶片颗粒。
 
-**父容器**：`relative min-h-screen overflow-hidden bg-slate-950 text-white`
-
-**背景层**（z-index 是关键，错的会盖住内容）：
 ```tsx
-{/* 流动曲线（两层反向，opacity 控制明暗） */}
-<div className="pointer-events-none fixed inset-0 z-0 text-white/50">
-  <FloatingPaths position={1} />
-  <FloatingPaths position={-1} />
-</div>
-{/* 底色兜底（-z-10 永远在最底） */}
-<div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-slate-950 via-purple-950/40 to-slate-950" />
-{/* 游戏页额外加一个深绿 radial（保留"麻将桌"感觉） */}
-<div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.08),_transparent_60%)]" />
+import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
+// ...
+<IrisPetalPageBackground />
 ```
 
-**曲线明暗**（`text-white/X`）：
-| 页面 | 透明度 | 备注 |
-|------|--------|------|
-| 首页 | `/50` | 跟后台/游戏页统一（之前 `/40` 偏淡） |
-| 管理后台 | `/50` | 文字密，曲线要更明显（`/30` 试过太淡） |
-| 游戏页 | `/50` | 同上 |
-| 想再亮 | `/60` | 几乎不透明 |
+旧的 `FloatingPaths` 曲线背景已不用。
 
 ## ⚠️ 文字对比度（深色背景上的白字）
 
-旧的 `text-white/30` ~ `/40` 在流动曲线背景上**几乎看不见**，要拉到 `/55` 以上才清晰。
+旧的 `text-white/30` ~ `/40` 在渐变背景上**几乎看不见**，要拉到 `/55` 以上才清晰。
 
 可用的层次（已用在首页，验证过）：
 
