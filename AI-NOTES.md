@@ -75,6 +75,15 @@ import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
 
 旧的 `FloatingPaths` 曲线背景已不用。
 
+## 移动端
+
+- 输入框用 `text-base`（16px），避免 iOS 聚焦放大整页
+- 按钮/可点区域尽量 `min-h-11`（约 44px）
+- 页面留 `env(safe-area-inset-*)`，适配刘海屏
+- 房间玩家列表：手机 `grid-cols-2`，桌面 `sm:grid-cols-4`
+- 选卡两列用 `w-full`，勿写死卡片宽度（会叠在一起）
+- 微信 iOS：顶部 `WeChatOpenTip` 引导用 Safari 打开
+
 ## ⚠️ 文字对比度（深色背景上的白字）
 
 旧的 `text-white/30` ~ `/40` 在渐变背景上**几乎看不见**，要拉到 `/55` 以上才清晰。

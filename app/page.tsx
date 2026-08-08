@@ -77,62 +77,61 @@ export default function HomePage() {
       <IrisPetalPageBackground />
       <WeChatOpenTip />
 
-      <div className="relative z-10 mx-auto max-w-2xl px-4 py-16">
-        {/* Logo + 标题 */}
+      <div className="relative z-10 mx-auto max-w-2xl px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] sm:px-6 sm:py-16">
         <div className="text-center">
           <div
-            className="mb-4 inline-block text-7xl font-black text-rose-300 drop-shadow-[0_0_24px_rgba(244,63,94,0.5)]"
+            className="mb-3 inline-block text-6xl font-black text-rose-300 drop-shadow-[0_0_24px_rgba(244,63,94,0.5)] sm:mb-4 sm:text-7xl"
             style={{ fontFamily: 'var(--font-noto-serif-tc), "PingFang TC", serif' }}
           >
             發
           </div>
-          <h1 className="mb-3 bg-gradient-to-r from-pink-300 via-rose-300 to-orange-300 bg-clip-text text-4xl font-bold tracking-tight text-transparent drop-shadow">
+          <h1 className="mb-2 bg-gradient-to-r from-pink-300 via-rose-300 to-orange-300 bg-clip-text text-3xl font-bold tracking-tight text-transparent drop-shadow sm:mb-3 sm:text-4xl">
             麻将抽卡器
           </h1>
-          <p className="text-lg text-white/70">
+          <p className="text-base text-white/70 sm:text-lg">
             4 人一桌 · 只抽技能卡
             <br />
-            <span className="text-sm text-white/40">
+            <span className="text-sm text-white/55">
               白银 30% · 棱彩 40% · 黄金 30%
             </span>
           </p>
         </div>
 
-        {/* 主卡片 */}
-        <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
-          {/* 切换按钮 */}
-          <div className="mb-6 flex gap-2 rounded-xl border border-white/10 bg-black/20 p-1">
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-xl sm:mt-12 sm:p-8">
+          <div className="mb-5 flex gap-1 rounded-xl border border-white/10 bg-black/20 p-1 sm:mb-6 sm:gap-2">
             <button
+              type="button"
               onClick={() => {
                 setMode('create');
                 setError('');
               }}
-              className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
+              className={`min-h-11 flex-1 touch-manipulation rounded-lg px-2 py-2.5 text-sm font-medium transition sm:px-4 ${
                 mode === 'create'
                   ? 'bg-white/15 text-white shadow-sm'
-                  : 'text-white/60 hover:text-white'
+                  : 'text-white/60'
               }`}
             >
               🎲 创建房间
             </button>
             <button
+              type="button"
               onClick={() => {
                 setMode('join');
                 setError('');
               }}
-              className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
+              className={`min-h-11 flex-1 touch-manipulation rounded-lg px-2 py-2.5 text-sm font-medium transition sm:px-4 ${
                 mode === 'join'
                   ? 'bg-white/15 text-white shadow-sm'
-                  : 'text-white/60 hover:text-white'
+                  : 'text-white/60'
               }`}
             >
-              🚪 输入房间码加入
+              🚪 加入房间
             </button>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-white/80">
+              <label className="mb-1.5 block text-sm font-medium text-white/80">
                 你的昵称
               </label>
               <Input
@@ -140,13 +139,15 @@ export default function HomePage() {
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="例如：张三"
                 maxLength={32}
-                className="border-white/20 bg-white/5 text-white placeholder-white/30 focus:border-pink-400"
+                autoComplete="nickname"
+                enterKeyHint="done"
+                className="border-white/20 bg-white/5 text-white placeholder-white/30 focus:border-pink-400 focus:ring-pink-400/30"
               />
             </div>
 
             {mode === 'join' && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-white/80">
+                <label className="mb-1.5 block text-sm font-medium text-white/80">
                   房间码
                 </label>
                 <Input
@@ -154,16 +155,19 @@ export default function HomePage() {
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                   placeholder="6 位字母数字"
                   maxLength={6}
-                  className="border-white/20 bg-white/5 font-mono tracking-widest text-white placeholder-white/30 focus:border-cyan-400"
+                  autoCapitalize="characters"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  inputMode="text"
+                  enterKeyHint="go"
+                  className="border-white/20 bg-white/5 font-mono text-lg tracking-[0.35em] text-white placeholder-white/30 focus:border-cyan-400 focus:ring-cyan-400/30"
                 />
-                <p className="mt-1 text-xs text-white/40">
-                  让房主告诉你房间码
-                </p>
+                <p className="mt-1.5 text-xs text-white/55">让房主发你房间码，或扫邀请码</p>
               </div>
             )}
 
             {error && (
-              <div className="rounded-lg border border-pink-500/30 bg-pink-500/10 p-3 text-sm text-pink-300">
+              <div className="rounded-lg border border-pink-500/30 bg-pink-500/10 p-3 text-sm text-pink-200">
                 {error}
               </div>
             )}
@@ -177,13 +181,13 @@ export default function HomePage() {
               {loading
                 ? '处理中...'
                 : mode === 'create'
-                ? '创建房间（房主）'
-                : '加入房间'}
+                  ? '创建房间（房主）'
+                  : '加入房间'}
             </Button>
           </div>
         </div>
 
-        <div className="mt-8 text-center text-xs text-white/55">
+        <div className="mt-8 pb-4 text-center text-xs text-white/55">
           线下打麻将用 · 4 人一组 · 实时同步
         </div>
       </div>

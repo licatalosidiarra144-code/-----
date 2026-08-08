@@ -16,10 +16,10 @@ export function WeChatOpenTip() {
   if (!show) return null;
 
   return (
-    <div className="relative z-50 border-b border-amber-300/40 bg-amber-500/95 px-3 py-2.5 text-center text-sm font-medium text-amber-950">
-      苹果微信里可能点不动。请点右上角
+    <div className="sticky top-0 z-50 border-b border-amber-300/40 bg-amber-500/95 px-3 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] text-center text-sm font-medium leading-snug text-amber-950">
+      微信里可能点不动。请点右上角
       <span className="mx-1 rounded bg-amber-950/15 px-1.5 py-0.5 font-bold">···</span>
-      →「在浏览器中打开」
+      →「在 Safari 打开」
     </div>
   );
 }

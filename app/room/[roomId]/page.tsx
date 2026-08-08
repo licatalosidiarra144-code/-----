@@ -264,12 +264,12 @@ function RoomPageInner() {
   }
 
   const joinDialog = joinOpen ? (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+      <div className="w-full max-w-sm rounded-t-2xl border border-white/10 bg-slate-900/95 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl backdrop-blur-xl sm:rounded-2xl sm:p-6">
         <h3 className="mb-2 text-lg font-bold text-white">🀄 加入房间</h3>
-        <p className="mb-4 text-sm text-white/50">
+        <p className="mb-4 text-sm text-white/55">
           房间码：
-          <span className="font-mono font-bold text-pink-400">{roomId}</span>
+          <span className="font-mono font-bold tracking-wider text-pink-400">{roomId}</span>
         </p>
         <input
           type="text"
@@ -281,7 +281,9 @@ function RoomPageInner() {
           placeholder="输入你的昵称"
           maxLength={32}
           autoFocus
-          className="mb-3 w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/30"
+          autoComplete="nickname"
+          enterKeyHint="go"
+          className="mb-3 min-h-11 w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2.5 text-base text-white placeholder-white/30 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/30"
         />
         {joinErr && <p className="mb-3 text-xs text-pink-400">{joinErr}</p>}
         <div className="flex gap-2">
@@ -326,19 +328,19 @@ function RoomPageInner() {
   const mySkillSelected = myDraw?.skill?.selectedId;
 
   return (
-    <div className="relative z-10 mx-auto min-h-dvh max-w-5xl px-4 py-8">
+    <div className="relative z-10 mx-auto min-h-dvh max-w-5xl px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-4 sm:py-8">
       <IrisPetalPageBackground />
       <WeChatOpenTip />
 
-      <div className="relative z-10 mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm text-white/50">房间码 · 点一下可复制</div>
-            <div className="flex flex-wrap items-center gap-2">
+      <div className="relative z-10 mb-4 rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg backdrop-blur-xl sm:mb-6 sm:p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <div className="text-xs text-white/55 sm:text-sm">房间码 · 点一下可复制</div>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => copyRoomCode(data.room.code)}
-                className="rounded-lg border border-white/20 bg-white/10 px-2.5 py-1 font-mono text-2xl font-bold tracking-widest text-white drop-shadow-[0_0_8px_rgba(244,63,94,0.6)] active:scale-95"
+                className="min-h-11 touch-manipulation rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 font-mono text-xl font-bold tracking-widest text-white drop-shadow-[0_0_8px_rgba(244,63,94,0.6)] active:scale-95 sm:text-2xl"
                 aria-label="复制房间码"
               >
                 {data.room.code}
@@ -346,73 +348,75 @@ function RoomPageInner() {
               <button
                 type="button"
                 onClick={() => copyRoomCode(data.room.code)}
-                className="rounded-md border border-pink-400/50 bg-pink-500/20 px-2.5 py-1 text-xs font-semibold text-pink-100 active:scale-95"
+                className="min-h-11 touch-manipulation rounded-md border border-pink-400/50 bg-pink-500/20 px-3 py-1.5 text-sm font-semibold text-pink-100 active:scale-95"
               >
                 {codeCopied ? '已复制 ✓' : '复制'}
               </button>
               {data.room.status === 'waiting' && data.players.length < 4 && (
                 <button
+                  type="button"
                   onClick={() => setInviteOpen(true)}
-                  className="rounded-md border border-white/20 bg-white/5 px-2 py-1 text-xs text-white/80 backdrop-blur-sm hover:border-pink-400 hover:text-pink-300"
+                  className="min-h-11 touch-manipulation rounded-md border border-white/20 bg-white/5 px-3 py-1.5 text-sm text-white/80"
                 >
                   📱 邀请
                 </button>
               )}
             </div>
             {codeCopied && (
-              <div className="mt-1 text-xs text-emerald-300">
-                已复制，可直接粘贴发微信
+              <div className="mt-1 text-xs text-emerald-300">已复制，可直接粘贴发微信</div>
+            )}
+          </div>
+          <div className="flex gap-4 sm:gap-6">
+            <div>
+              <div className="text-xs text-white/55">状态</div>
+              <div className="text-base font-semibold text-white sm:text-lg">
+                {statusLabel(data.room.status)}
               </div>
-            )}
-          </div>
-          <div className="text-right">
-            <div className="text-sm text-white/50">状态</div>
-            <div className="text-lg font-semibold text-white">
-              {statusLabel(data.room.status)}
+              {data.room.round > 0 && (
+                <div className="text-xs text-white/45">第 {data.room.round} 局</div>
+              )}
             </div>
-            {data.room.round > 0 && (
-              <div className="text-xs text-white/40">第 {data.room.round} 局</div>
-            )}
-          </div>
-          <div className="text-right">
-            <div className="text-sm text-white/50">人数</div>
-            <div className="text-lg font-semibold text-white">
-              {data.players.length} / 4
+            <div>
+              <div className="text-xs text-white/55">人数</div>
+              <div className="text-base font-semibold text-white sm:text-lg">
+                {data.players.length} / 4
+              </div>
             </div>
           </div>
         </div>
         {data.room.currentMode && (
-          <div className="mt-3 text-center text-lg font-bold text-white drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]">
+          <div className="mt-3 text-center text-base font-bold text-white drop-shadow-[0_0_12px_rgba(244,63,94,0.5)] sm:text-lg">
             {MODE_BANNER[data.room.currentMode] || MODE_LABELS[data.room.currentMode]}
           </div>
         )}
       </div>
 
-      <div className="mb-6">
-        <div className="mb-3 px-1 text-sm font-semibold text-white/80">🪑 玩家</div>
-        <div className="grid grid-cols-4 gap-3">
+      <div className="relative z-10 mb-4 sm:mb-6">
+        <div className="mb-2 px-1 text-sm font-semibold text-white/80 sm:mb-3">🪑 玩家</div>
+        {/* 手机 2×2，宽屏 1×4，避免四人挤成一条看不清 */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
           {data.players.map((p, idx) => {
             const skillDone = data.draws[p.id]?.skill?.selectedId;
             const grad = PLAYER_GRADIENTS[idx % PLAYER_GRADIENTS.length];
             return (
               <button
                 key={p.id}
+                type="button"
                 onClick={() => setPlayerView(p)}
-                className={`group relative flex flex-col items-center overflow-hidden rounded-2xl bg-gradient-to-br ${grad} p-4 shadow-md transition-all hover:scale-105 hover:shadow-xl`}
+                className={`group relative flex min-h-[5.5rem] flex-col items-center overflow-hidden rounded-2xl bg-gradient-to-br ${grad} p-2.5 shadow-md transition-all active:scale-[0.98] sm:min-h-0 sm:p-4`}
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/10" />
-                <div className="pointer-events-none absolute -top-8 -right-8 h-20 w-20 rounded-full bg-white/20 blur-2xl" />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/40 bg-white/25 text-xl font-bold text-white shadow-inner backdrop-blur-sm">
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/40 bg-white/25 text-base font-bold text-white shadow-inner sm:h-14 sm:w-14 sm:text-xl">
                   {p.nickname[0]}
                   {p.isOwner && (
-                    <span className="absolute -right-1 -top-1 text-base drop-shadow">👑</span>
+                    <span className="absolute -right-1 -top-1 text-sm drop-shadow sm:text-base">👑</span>
                   )}
                 </div>
-                <div className="relative mt-2 text-sm font-semibold text-white drop-shadow">
+                <div className="relative mt-1.5 max-w-full truncate px-1 text-xs font-semibold text-white drop-shadow sm:mt-2 sm:text-sm">
                   {p.nickname}
                 </div>
-                <div className="relative mt-1.5">
-                  <span className="inline-block rounded-full bg-white/30 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+                <div className="relative mt-1">
+                  <span className="inline-block rounded-full bg-white/30 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
                     {data.room.status === 'waiting'
                       ? '等待中'
                       : skillDone
@@ -429,15 +433,17 @@ function RoomPageInner() {
             return (
               <div
                 key={`empty-${i}`}
-                className={`relative flex flex-col items-center overflow-hidden rounded-2xl border-2 border-dashed border-white/60 bg-gradient-to-br ${grad} p-4 opacity-50`}
+                className={`relative flex min-h-[5.5rem] flex-col items-center overflow-hidden rounded-2xl border-2 border-dashed border-white/60 bg-gradient-to-br ${grad} p-2.5 opacity-50 sm:min-h-0 sm:p-4`}
               >
                 <div className="pointer-events-none absolute inset-0 bg-white/40" />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-dashed border-white/60 bg-white/20 text-xl font-bold text-white/70 backdrop-blur-sm">
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-white/60 bg-white/20 text-base font-bold text-white/70 sm:h-14 sm:w-14 sm:text-xl">
                   +
                 </div>
-                <div className="relative mt-2 text-sm font-medium text-white/80">空位</div>
-                <div className="relative mt-1.5">
-                  <span className="inline-block rounded-full bg-white/30 px-2 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm">
+                <div className="relative mt-1.5 text-xs font-medium text-white/80 sm:mt-2 sm:text-sm">
+                  空位
+                </div>
+                <div className="relative mt-1">
+                  <span className="inline-block rounded-full bg-white/30 px-1.5 py-0.5 text-[10px] font-medium text-white/80">
                     等待加入
                   </span>
                 </div>
@@ -448,23 +454,26 @@ function RoomPageInner() {
       </div>
 
       {data.room.status === 'waiting' && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-xl">
+        <div className="relative z-10 rounded-2xl border border-white/10 bg-white/5 p-5 text-center shadow-lg backdrop-blur-xl sm:p-8">
           {me.isOwner ? (
             <>
-              <p className="mb-2 text-lg font-semibold text-white">等齐 4 人后，房主点这里开始</p>
-              <p className="mb-6 text-sm text-white/50">
+              <p className="mb-2 text-base font-semibold text-white sm:text-lg">
+                等齐 4 人后，房主点这里开始
+              </p>
+              <p className="mb-5 text-sm text-white/55 sm:mb-6">
                 系统按概率抽局型：白银 30% / 棱彩 40% / 黄金 30%
               </p>
               <Button
                 onClick={startGame}
                 disabled={data.players.length !== 4 || actionLoading}
                 size="lg"
+                className="w-full sm:w-auto"
               >
                 {data.players.length === 4 ? '🎲 开始游戏' : `还差 ${4 - data.players.length} 人`}
               </Button>
             </>
           ) : (
-            <p className="text-lg text-white/60">等房主开始游戏...</p>
+            <p className="text-base text-white/60 sm:text-lg">等房主开始游戏...</p>
           )}
         </div>
       )}
@@ -637,13 +646,15 @@ function SkillPickPhase({
   const canReroll = rerollsUsed < 1;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl">
-      <h2 className="mb-2 text-center text-xl font-bold text-white">🎯 选 1 张技能卡（4 选 1）</h2>
-      <p className="mb-6 text-center text-sm text-white/50">
+    <div className="relative z-10 rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg backdrop-blur-xl sm:p-6">
+      <h2 className="mb-1 text-center text-lg font-bold text-white sm:mb-2 sm:text-xl">
+        🎯 选 1 张技能卡（4 选 1）
+      </h2>
+      <p className="mb-4 text-center text-sm text-white/55 sm:mb-6">
         本局可重选 1 次
         {canReroll ? '（尚未使用）' : '（已用完）'}
       </p>
-      <div className="mb-6 grid grid-cols-2 gap-2 sm:gap-3">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:mb-6 sm:gap-3">
         {cards.map((c) => (
           <div key={c.id} className="min-w-0">
             <CardTile
@@ -659,6 +670,7 @@ function SkillPickPhase({
           variant="outline"
           onClick={onReroll}
           disabled={!canReroll || loading}
+          className="w-full sm:w-auto"
         >
           {canReroll ? '🔄 重选一次' : '重选已用完'}
         </Button>
