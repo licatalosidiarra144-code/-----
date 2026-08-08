@@ -19,8 +19,17 @@
   }
 }
 
+html,
 body {
-  background: var(--background);
+  min-height: 100%;
+  /* 避免 iOS 把整页当成不可点的合成层 */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: #1b1035;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* 让按钮/输入在触摸设备上更跟手 */
+  touch-action: manipulation;
 }

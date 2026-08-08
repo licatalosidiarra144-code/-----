@@ -8,6 +8,7 @@ import { CardTile } from '@/components/card/card-tile';
 import { type Card, type GameMode, MODE_LABELS } from '@/lib/cards/types';
 import { cn } from '@/components/utils';
 import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
+import { WeChatOpenTip } from '@/components/wechat-open-tip';
 
 interface Player {
   id: number;
@@ -325,10 +326,11 @@ function RoomPageInner() {
   const mySkillSelected = myDraw?.skill?.selectedId;
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-5xl px-4 py-8">
+    <div className="relative z-10 mx-auto min-h-dvh max-w-5xl px-4 py-8">
       <IrisPetalPageBackground />
+      <WeChatOpenTip />
 
-      <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
+      <div className="relative z-10 mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm text-white/50">房间码 · 点一下可复制</div>

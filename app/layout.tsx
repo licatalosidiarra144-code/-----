@@ -22,6 +22,17 @@ const notoSerifTC = Noto_Serif_TC({
 export const metadata: Metadata = {
   title: "麻将抽卡器 · 4 人一桌",
   description: "4 人一桌 · 只抽技能卡 · 白银/棱彩/黄金三局型",
+  // 避免被微信/系统当成纯图片预览
+  other: {
+    "format-detection": "telephone=no",
+  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -34,7 +45,9 @@ export default function RootLayout({
       lang="zh-CN"
       className={`${geistSans.variable} ${geistMono.variable} ${notoSerifTC.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="relative z-0 min-h-full flex flex-col touch-manipulation">
+        {children}
+      </body>
     </html>
   );
 }

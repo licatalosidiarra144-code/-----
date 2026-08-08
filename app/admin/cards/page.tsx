@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/components/utils';
 import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
+import { WeChatOpenTip } from '@/components/wechat-open-tip';
 
 // ============================================
 // 卡牌管理后台：增删改技能卡
@@ -138,9 +139,10 @@ export default function AdminCardsPage() {
   // ---- 未登录：显示密码框 ----
   if (!pass) {
     return (
-      <div className="relative min-h-screen overflow-hidden">
+      <div className="relative z-10 min-h-dvh overflow-x-hidden">
         <DarkBackground />
-        <div className="mx-auto max-w-md px-4 py-16">
+        <WeChatOpenTip />
+        <div className="relative z-10 mx-auto max-w-md px-4 py-16">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
             <h1 className="mb-2 text-2xl font-bold text-white">🛠️ 卡牌管理后台</h1>
             <p className="mb-6 text-sm text-white/65">
@@ -180,10 +182,11 @@ export default function AdminCardsPage() {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative z-10 min-h-dvh overflow-x-hidden">
       <DarkBackground />
+      <WeChatOpenTip />
 
-      <div className="mx-auto max-w-5xl px-4 py-8">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 py-8">
         {/* 顶部 */}
         <div className="mb-6 flex items-center justify-between">
           <div>

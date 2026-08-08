@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
+import { WeChatOpenTip } from '@/components/wechat-open-tip';
 
 export default function HomePage() {
   const router = useRouter();
@@ -72,10 +73,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
+    <div className="relative z-10 min-h-dvh overflow-x-hidden text-white">
       <IrisPetalPageBackground />
+      <WeChatOpenTip />
 
-      <div className="relative mx-auto max-w-2xl px-4 py-16">
+      <div className="relative z-10 mx-auto max-w-2xl px-4 py-16">
         {/* Logo + 标题 */}
         <div className="text-center">
           <div
