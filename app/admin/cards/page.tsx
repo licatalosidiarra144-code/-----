@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/components/utils';
 import { IrisPetalPageBackground } from '@/components/ui/iris-petal';
 import { WeChatOpenTip } from '@/components/wechat-open-tip';
+import { iconForMode, MODE_ICONS, type GameMode } from '@/lib/cards/types';
 
 // ============================================
 // 卡牌管理后台：增删改技能卡
@@ -14,7 +15,7 @@ import { WeChatOpenTip } from '@/components/wechat-open-tip';
 // ============================================
 
 type CardType = 'skill';
-type Mode = 'silver' | 'prismatic' | 'gold';
+type Mode = GameMode;
 type Rarity = 'common' | 'rare' | 'epic';
 
 interface Card {
@@ -35,7 +36,7 @@ const EMPTY_CARD: Card = {
   name: '',
   desc: '',
   uses: 0,
-  imageUrl: '🃏',
+  imageUrl: MODE_ICONS.gold,
   rarity: 'common',
 };
 
@@ -91,9 +92,10 @@ export default function AdminCardsPage() {
   }
 
   async function save(card: Card) {
+    const payload = { ...card, imageUrl: iconForMode(card.mode) };
     const url = isNew
       ? '/api/admin/cards'
-      : `/api/admin/cards/${encodeURIComponent(card.id)}`;
+      : `/api/admin/cards/${encodeURIComponent(payload.id)}`;
     const method = isNew ? 'POST' : 'PUT';
     const res = await fetch(url, {
       method,
@@ -101,7 +103,7 @@ export default function AdminCardsPage() {
         'Content-Type': 'application/json',
         'X-Admin-Password': pass || '',
       },
-      body: JSON.stringify(card),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
     if (res.status === 401) {
@@ -349,7 +351,7 @@ function CardRow({
             modeStyle.iconBg
           )}
         >
-          {card.imageUrl}
+          {iconForMode(card.mode)}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -436,10 +438,13 @@ function CardEditor({
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="局型">
+            <Field label="局型（图标自动绑定）">
               <select
                 value={card.mode}
-                onChange={(e) => onChange({ ...card, mode: e.target.value as Mode })}
+                onChange={(e) => {
+                  const mode = e.target.value as Mode;
+                  onChange({ ...card, mode, imageUrl: iconForMode(mode) });
+                }}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-400 focus:outline-none"
               >
                 <option value="silver" className="bg-slate-900">🥈 白银局</option>
@@ -460,6 +465,15 @@ function CardEditor({
             </Field>
           </div>
 
+          <Field label="图标（随局型，不可改）">
+            <div className="flex items-center gap-3 rounded-lg border border-white/20 bg-white/5 px-3 py-2">
+              <span className="text-3xl leading-none">{iconForMode(card.mode)}</span>
+              <span className="text-xs text-white/55">
+                白银 🥈 · 棱彩 🌈 · 黄金 🎴
+              </span>
+            </div>
+          </Field>
+
           <Field label="名字">
             <input
               type="text"
@@ -475,16 +489,6 @@ function CardEditor({
               onChange={(e) => onChange({ ...card, desc: e.target.value })}
               rows={2}
               className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-400 focus:outline-none"
-            />
-          </Field>
-
-          <Field label="emoji / 图">
-            <input
-              type="text"
-              value={card.imageUrl}
-              onChange={(e) => onChange({ ...card, imageUrl: e.target.value })}
-              maxLength={4}
-              className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-center text-2xl focus:border-pink-400 focus:outline-none"
             />
           </Field>
         </div>

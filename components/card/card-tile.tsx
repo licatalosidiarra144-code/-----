@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/components/utils';
-import type { Card, GameMode } from '@/lib/cards/types';
+import { iconForMode, type Card, type GameMode } from '@/lib/cards/types';
 
 const MODE_STYLE: Record<
   GameMode,
@@ -95,7 +95,7 @@ export function CardTile({
 
       <div className="mb-1.5 flex items-start justify-between gap-1">
         <div className={cn('shrink-0 leading-none drop-shadow-sm', emojiClasses[size])}>
-          {card.imageUrl}
+          {iconForMode(card.mode)}
         </div>
         <div
           className={cn(

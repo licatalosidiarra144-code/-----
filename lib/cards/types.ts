@@ -19,3 +19,14 @@ export const MODE_LABELS: Record<GameMode, string> = {
   prismatic: '棱彩局',
   gold: '黄金局',
 };
+
+/** 局型固定图标，不必手改 imageUrl */
+export const MODE_ICONS: Record<GameMode, string> = {
+  silver: '🥈',
+  prismatic: '🌈',
+  gold: '🎴',
+};
+
+export function iconForMode(mode: GameMode): string {
+  return MODE_ICONS[mode] ?? '🃏';
+}

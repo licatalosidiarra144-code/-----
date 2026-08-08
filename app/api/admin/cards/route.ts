@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { checkAdminPassword } from '@/lib/admin-auth';
+import { iconForMode, type GameMode } from '@/lib/cards/types';
 
 const CARDS_FILE = path.join(process.cwd(), 'data', 'cards.json');
 
@@ -54,12 +55,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `id "${newCard.id}" 已存在` }, { status: 400 });
     }
 
-    // 补默认值
+    // 补默认值；图标跟局型绑定，不接受手改
     const card = {
       uses: 0,
-      imageUrl: '🃏',
       rarity: 'common',
       ...newCard,
+      imageUrl: iconForMode(newCard.mode as GameMode),
     };
     data.cards.push(card);
     writeCardsFile(data);

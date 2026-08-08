@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { checkAdminPassword } from '@/lib/admin-auth';
+import { iconForMode, type GameMode } from '@/lib/cards/types';
 
 const CARDS_FILE = path.join(process.cwd(), 'data', 'cards.json');
 
@@ -50,8 +51,10 @@ export async function PUT(
     if (idx === -1) {
       return NextResponse.json({ error: `id "${id}" 不存在` }, { status: 404 });
     }
-    // 保留 id 不变；其他字段被 updates 覆盖
-    data.cards[idx] = { ...data.cards[idx], ...updates, id };
+    // 保留 id 不变；图标跟局型绑定
+    const merged = { ...data.cards[idx], ...updates, id };
+    merged.imageUrl = iconForMode(merged.mode as GameMode);
+    data.cards[idx] = merged;
     writeCardsFile(data);
     return NextResponse.json(data.cards[idx]);
   } catch (e: any) {
