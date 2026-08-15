@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "后台 · 卡牌管理",
+  "navigationBarBackgroundColor": "#1B1035",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true
+}

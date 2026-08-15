@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rooms, roomPlayers, cardDraws } from '@/lib/db/helpers';
 import { drawCards, getCardsByMode, pickGameMode } from '@/lib/cards';
-import { getPlayerSession } from '@/lib/session';
+import { getPlayerSessionFromAny } from '@/lib/session-header';
 
 export async function POST(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function POST(
   try {
     const { roomId: roomCode } = await params;
 
-    const session = await getPlayerSession();
+    const session = await getPlayerSessionFromAny(request, roomCode);
     if (!session || session.roomCode !== roomCode) {
       return NextResponse.json({ error: '请先加入房间' }, { status: 401 });
     }

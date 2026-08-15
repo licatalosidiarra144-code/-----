@@ -1,0 +1,137 @@
+<!--pages/room/room.wxml-->
+<view class="container">
+
+  <!-- 顶部信息条 -->
+  <view class="header">
+    <view class="row" style="justify-content:space-between;">
+      <view class="text-bright" style="font-size:28rpx;">
+        房间 <text class="text-pink" style="font-weight:700;">{{code}}</text>
+      </view>
+      <view class="text-dim" style="font-size:24rpx;">
+        {{round > 0 ? '第 ' + round + ' 局' : ''}}
+      </view>
+    </view>
+    <view wx:if="{{currentMode}}" class="row" style="margin-top:12rpx;gap:16rpx;">
+      <view class="badge {{currentMode}}">
+        {{modeLabel}}
+      </view>
+    </view>
+  </view>
+
+  <view class="spacer-md"></view>
+
+  <!-- 4 玩家列表（2x2） -->
+  <view class="players">
+    <view wx:for="{{players}}" wx:key="id" class="player">
+      <view class="player-avatar">{{item.nickname[0]}}</view>
+      <view class="player-name text-bright">
+        {{item.nickname}}{{item.isOwner ? ' 👑' : ''}}{{me.id === item.id ? ' (我)' : ''}}
+      </view>
+      <view wx:if="{{status === 'skill_picking' || status === 'playing'}}" class="text-dim" style="font-size:24rpx;margin-top:8rpx;">
+        {{item.selectedCardName ? '✓ 已选卡' : '…… 待选'}}
+      </view>
+    </view>
+  </view>
+
+  <view class="spacer-lg"></view>
+
+  <!-- ========= 阶段 1：等待 ========= -->
+  <block wx:if="{{status === 'waiting'}}">
+    <view class="card col">
+      <view class="text-bright" style="font-size:30rpx;font-weight:600;">
+        {{me.isOwner ? '房主操作' : '等待房主开始'}}
+      </view>
+      <view class="text-mid" style="font-size:26rpx;">
+        {{players.length < 4 ? '还需 ' + (4 - players.length) + ' 人加入' : '4 人到位，可以开始'}}
+      </view>
+    </view>
+
+    <view class="spacer-md"></view>
+
+    <button wx:if="{{me.isOwner}}" class="btn-primary" bindtap="onStart" disabled="{{players.length !== 4}}">
+      开始游戏
+    </button>
+    <view wx:else class="text-dim" style="text-align:center;font-size:26rpx;">
+      提示房主：4 人到齐后点开始
+    </view>
+  </block>
+
+  <!-- ========= 阶段 2：选技能卡 ========= -->
+  <block wx:if="{{status === 'skill_picking'}}">
+    <view class="text-bright" style="font-size:30rpx;text-align:center;font-weight:600;">
+      本局模式：{{modeLabel}}
+    </view>
+    <view class="text-dim" style="text-align:center;font-size:24rpx;margin-top:8rpx;">
+      选 1 张技能卡（可重选 1 次）
+    </view>
+
+    <view class="spacer-md"></view>
+
+    <view wx:if="{{myDraw && !myDraw.selectedCardId}}" class="cards-grid">
+      <view
+        wx:for="{{myDraw.cardDetails}}"
+        wx:key="id"
+        class="card-tile {{item.mode}}"
+        bindtap="onPickSkill"
+        data-cardid="{{item.id}}"
+      >
+        <view>
+          <view class="name">{{item.name}}</view>
+          <view class="desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{myDraw && !myDraw.selectedCardId && (myDraw.rerollsUsed || 0) < 1}}" class="spacer-md"></view>
+    <button
+      wx:if="{{myDraw && !myDraw.selectedCardId && (myDraw.rerollsUsed || 0) < 1}}"
+      class="btn-secondary" bindtap="onReroll"
+    >
+      🔄 重选一次
+    </button>
+
+    <view wx:if="{{myDraw && myDraw.selectedCardId}}" class="card col">
+      <view class="text-bright" style="font-size:30rpx;">你已选择</view>
+      <view class="text-pink" style="font-size:40rpx;font-weight:700;">
+        {{mySelectedCard.name}}
+      </view>
+      <view class="text-mid" style="font-size:26rpx;margin-top:12rpx;">
+        {{mySelectedCard.desc}}
+      </view>
+    </view>
+  </block>
+
+  <!-- ========= 阶段 3：对局展示 ========= -->
+  <block wx:if="{{status === 'playing' || status === 'finished'}}">
+    <view class="card col">
+      <view class="text-bright" style="font-size:30rpx;">你的本局技能</view>
+      <view wx:if="{{mySelectedCard}}" class="text-pink" style="font-size:40rpx;font-weight:700;">
+        {{mySelectedCard.name}}
+      </view>
+      <view wx:if="{{mySelectedCard}}" class="text-mid" style="font-size:26rpx;margin-top:12rpx;">
+        {{mySelectedCard.desc}}
+      </view>
+      <view wx:if="{{!mySelectedCard}}" class="text-dim" style="font-size:26rpx;">
+        你这局没卡（异常状态）
+      </view>
+    </view>
+
+    <view class="spacer-md"></view>
+
+    <view class="text-bright" style="font-size:30rpx;font-weight:600;">其他人</view>
+    <view wx:for="{{otherSelectedCards}}" wx:key="playerId" class="card" style="margin-top:16rpx;">
+      <view class="text-bright" style="font-size:28rpx;font-weight:600;">
+        {{item.nickname}}{{item.isOwner ? ' 👑' : ''}}
+      </view>
+      <view class="text-pink" style="font-size:30rpx;margin-top:8rpx;">
+        {{item.card ? item.card.name : '（未选）'}}
+      </view>
+    </view>
+
+    <view wx:if="{{me.isOwner}}" class="spacer-md"></view>
+    <button wx:if="{{me.isOwner}}" class="btn-primary" bindtap="onNextRound">
+      开下一局
+    </button>
+  </block>
+
+</view>

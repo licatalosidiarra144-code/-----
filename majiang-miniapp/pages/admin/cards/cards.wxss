@@ -1,0 +1,36 @@
+/* pages/admin/cards/cards.wxss */
+.cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.card-item {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1rpx solid rgba(255, 255, 255, 0.12);
+  border-radius: 20rpx;
+  padding: 16rpx;
+}
+.card-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  justify-content: flex-end;
+}
+
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+  z-index: 10;
+}
+.modal {
+  width: 100%;
+  background: #1B1035;
+  border: 1rpx solid rgba(255, 255, 255, 0.18);
+  border-radius: 24rpx;
+  padding: 32rpx;
+}

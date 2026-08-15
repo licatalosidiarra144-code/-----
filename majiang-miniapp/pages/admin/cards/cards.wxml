@@ -1,0 +1,68 @@
+<!--pages/admin/cards/cards.wxml-->
+<view class="container">
+
+  <view class="row" style="justify-content:space-between;align-items:center;">
+    <view class="text-bright" style="font-size:32rpx;font-weight:600;">卡牌库（共 {{cards.length}} 张）</view>
+    <view class="btn-ghost" bindtap="onLogout">退出</view>
+  </view>
+
+  <view class="spacer-md"></view>
+
+  <view class="cards-list">
+    <view wx:for="{{cards}}" wx:key="id" class="card-item">
+      <view class="card-tile {{item.mode}}" style="min-height:120rpx;">
+        <view>
+          <view class="name">{{item.name}}</view>
+          <view class="desc">{{item.desc}}</view>
+          <view class="text-dim" style="font-size:22rpx;margin-top:8rpx;">id: {{item.id}} · {{item.mode}}</view>
+        </view>
+      </view>
+      <view class="card-actions">
+        <view class="btn-ghost" bindtap="onEdit" data-id="{{item.id}}">✏️ 编辑</view>
+        <view class="btn-ghost" style="color:#f43f5e;" bindtap="onDelete" data-id="{{item.id}}">🗑 删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="spacer-lg"></view>
+
+  <button class="btn-primary" bindtap="onAdd">+ 新增卡牌</button>
+
+  <!-- 编辑 / 新增弹窗 -->
+  <view wx:if="{{editing}}" class="modal-mask" bindtap="onModalClose">
+    <view class="modal" catchtap="noop">
+      <view class="text-bright" style="font-size:32rpx;font-weight:600;">
+        {{form.id ? '编辑卡牌' : '新增卡牌'}}
+      </view>
+      <view class="spacer-md"></view>
+
+      <view class="col">
+        <text class="text-mid">ID</text>
+        <input class="input" placeholder="例：gold-skill-01" value="{{form.id}}" disabled="{{!!form._isEdit}}" bindinput="onFormInput" data-key="id" />
+      </view>
+      <view class="spacer-sm"></view>
+      <view class="col">
+        <text class="text-mid">名称</text>
+        <input class="input" placeholder="技能名" value="{{form.name}}" bindinput="onFormInput" data-key="name" />
+      </view>
+      <view class="spacer-sm"></view>
+      <view class="col">
+        <text class="text-mid">描述</text>
+        <input class="input" placeholder="技能效果" value="{{form.desc}}" bindinput="onFormInput" data-key="desc" />
+      </view>
+      <view class="spacer-sm"></view>
+      <view class="col">
+        <text class="text-mid">局型</text>
+        <picker mode="selector" range="{{['silver','prismatic','gold']}}" value="{{form.modeIndex}}" bindchange="onFormModeChange">
+          <view class="input" style="display:flex;align-items:center;">{{form.mode}}</view>
+        </picker>
+      </view>
+
+      <view class="spacer-md"></view>
+
+      <button class="btn-primary" bindtap="onSave">保存</button>
+      <view class="spacer-sm"></view>
+      <button class="btn-ghost" bindtap="onModalClose">取消</button>
+    </view>
+  </view>
+</view>

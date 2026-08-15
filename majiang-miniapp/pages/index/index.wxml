@@ -1,0 +1,43 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <view class="hero">
+    <view class="title">🀄 麻将抽卡器</view>
+    <view class="subtitle">4 人一桌，扫码进房，开局抽技能</view>
+  </view>
+
+  <view class="spacer-lg"></view>
+
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view class="tab {{tab==='create' ? 'active' : ''}}" bindtap="onTab" data-tab="create">创建房间</view>
+    <view class="tab {{tab==='join' ? 'active' : ''}}" bindtap="onTab" data-tab="join">加入房间</view>
+  </view>
+
+  <view class="spacer-md"></view>
+
+  <view class="card col">
+    <view class="text-bright" style="font-size:30rpx;">昵称</view>
+    <input class="input" placeholder="输入你的昵称" maxlength="32" value="{{nickname}}" bindinput="onNickname" />
+    <view style="font-size:24rpx;" class="text-dim">{{nickname.length}}/32</view>
+  </view>
+
+  <view class="spacer-md"></view>
+
+  <block wx:if="{{tab==='join'}}">
+    <view class="card col">
+      <view class="text-bright" style="font-size:30rpx;">房间码（6 位）</view>
+      <input class="input" placeholder="例：A3F7K2" maxlength="8" value="{{roomCode}}" bindinput="onRoomCode" />
+    </view>
+    <view class="spacer-md"></view>
+  </block>
+
+  <button class="btn-primary" bindtap="onSubmit" disabled="{{!canSubmit}}">
+    {{tab==='create' ? '创建房间' : '加入房间'}}
+  </button>
+
+  <view class="spacer-lg"></view>
+
+  <view class="row" style="justify-content:center;">
+    <view class="btn-ghost" bindtap="goAdmin">后台管理 →</view>
+  </view>
+</view>

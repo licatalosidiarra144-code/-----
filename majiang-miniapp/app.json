@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/room/room",
+    "pages/admin/login/login",
+    "pages/admin/cards/cards"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1B1035",
+    "navigationBarTitleText": "麻将抽卡器",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#1B1035"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

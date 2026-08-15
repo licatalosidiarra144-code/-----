@@ -1,0 +1,23 @@
+<!--pages/admin/login/login.wxml-->
+<view class="container">
+  <view class="spacer-lg"></view>
+  <view class="title" style="text-align:center;">🛡 后台登录</view>
+  <view class="subtitle" style="text-align:center;">输入管理员密码进入卡牌管理</view>
+
+  <view class="spacer-lg"></view>
+
+  <view class="card col">
+    <view class="text-bright" style="font-size:30rpx;">管理员密码</view>
+    <input class="input" password="true" placeholder="请输入密码" value="{{password}}" bindinput="onInput" />
+  </view>
+
+  <view class="spacer-md"></view>
+
+  <button class="btn-primary" bindtap="onSubmit" disabled="{{!password}}">登录</button>
+
+  <view class="spacer-md"></view>
+
+  <view class="text-dim" style="font-size:24rpx;text-align:center;">
+    密码由后端 .env 中 ADMIN_PASSWORD 配置
+  </view>
+</view>

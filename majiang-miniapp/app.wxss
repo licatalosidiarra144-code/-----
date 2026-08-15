@@ -1,0 +1,121 @@
+/* 全局样式：复用 Web 主题色
+   #1B1035 / #4A3A8C / #B58AC9 / #F5D6E6 */
+
+page {
+  background: linear-gradient(180deg, #1B1035 0%, #4A3A8C 100%);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  min-height: 100vh;
+}
+
+/* 通用容器 */
+.container {
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+/* 通用标题 */
+.title {
+  font-size: 48rpx;
+  font-weight: 700;
+  background: linear-gradient(135deg, #F5D6E6 0%, #B58AC9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 12rpx;
+}
+
+/* 卡片 */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1rpx solid rgba(255, 255, 255, 0.18);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+/* 按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 24rpx 0;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  min-height: 88rpx;
+}
+.btn-primary[disabled] {
+  opacity: 0.4;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1rpx solid rgba(255, 255, 255, 0.22);
+  border-radius: 999rpx;
+  padding: 22rpx 0;
+  font-size: 30rpx;
+  text-align: center;
+  min-height: 88rpx;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 26rpx;
+  border: none;
+  padding: 16rpx;
+  min-height: 64rpx;
+}
+
+/* 输入 */
+.input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1rpx solid rgba(255, 255, 255, 0.18);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  color: #fff;
+  font-size: 32rpx;
+  min-height: 88rpx;
+}
+
+/* 间距 */
+.row { display: flex; align-items: center; gap: 16rpx; }
+.col { display: flex; flex-direction: column; gap: 16rpx; }
+.spacer-sm { height: 16rpx; }
+.spacer-md { height: 32rpx; }
+.spacer-lg { height: 48rpx; }
+
+/* 文字对比度（最低 /55 起步） */
+.text-dim   { color: rgba(255, 255, 255, 0.55); }
+.text-mid   { color: rgba(255, 255, 255, 0.65); }
+.text-bright{ color: rgba(255, 255, 255, 0.85); }
+.text-pink  { color: #F5D6E6; }
+
+/* 卡牌样式（白银 / 棱彩 / 黄金） */
+.card-tile {
+  border-radius: 24rpx;
+  padding: 24rpx;
+  min-height: 220rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 2rpx solid transparent;
+  position: relative;
+}
+.card-tile.silver    { background: linear-gradient(160deg, #dbeafe, #93c5fd); color: #1e293b; border-color: #60a5fa; }
+.card-tile.prismatic { background: linear-gradient(160deg, #c084fc, #7c3aed); color: #fff; border-color: #f0abfc; }
+.card-tile.gold      { background: linear-gradient(160deg, #fcd34d, #f59e0b); color: #4c1d05; border-color: #fbbf24; }
+.card-tile .name { font-size: 32rpx; font-weight: 700; }
+.card-tile .desc { font-size: 24rpx; opacity: 0.8; margin-top: 8rpx; }
+.card-tile.selected {
+  outline: 4rpx solid #ec4899;
+  outline-offset: 4rpx;
+}
