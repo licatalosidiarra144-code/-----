@@ -12,7 +12,7 @@ export async function POST(
   try {
     const { roomId: roomCode } = await params;
 
-    const session = await getPlayerSessionFromAny(request, roomCode);
+    const session = await getPlayerSessionFromAny(_request, roomCode);
     if (!session || session.roomCode !== roomCode) {
       return NextResponse.json({ error: '请先加入房间' }, { status: 401 });
     }
