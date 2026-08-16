@@ -92,9 +92,11 @@ function RoomPageInner() {
   const [joinLoading, setJoinLoading] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
+  // 有房间数据但没有会话（中途退出/换浏览器）→ 弹出重进
   useEffect(() => {
-    if (joinFlag && !me) setJoinOpen(true);
-  }, [joinFlag, me]);
+    if (data && !me) setJoinOpen(true);
+    else if (joinFlag && !me) setJoinOpen(true);
+  }, [joinFlag, me, data]);
 
   async function doJoin() {
     const nick = joinNick.trim();
@@ -263,13 +265,22 @@ function RoomPageInner() {
     );
   }
 
+  const gameStarted = Boolean(data && data.room.status !== 'waiting');
+
   const joinDialog = joinOpen ? (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4">
       <div className="w-full max-w-sm rounded-t-2xl border border-white/10 bg-slate-900/95 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl backdrop-blur-xl sm:rounded-2xl sm:p-6">
-        <h3 className="mb-2 text-lg font-bold text-white">🀄 加入房间</h3>
-        <p className="mb-4 text-sm text-white/55">
+        <h3 className="mb-2 text-lg font-bold text-white">
+          {gameStarted ? '🔄 重新进入' : '🀄 加入房间'}
+        </h3>
+        <p className="mb-1 text-sm text-white/55">
           房间码：
           <span className="font-mono font-bold tracking-wider text-pink-400">{roomId}</span>
+        </p>
+        <p className="mb-4 text-xs text-white/45">
+          {gameStarted
+            ? '中途退出了？输入原来的昵称即可回到本桌'
+            : '输入昵称加入这桌'}
         </p>
         <input
           type="text"
@@ -278,7 +289,7 @@ function RoomPageInner() {
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !joinLoading) doJoin();
           }}
-          placeholder="输入你的昵称"
+          placeholder={gameStarted ? '原来的昵称' : '输入你的昵称'}
           maxLength={32}
           autoFocus
           autoComplete="nickname"
@@ -293,12 +304,16 @@ function RoomPageInner() {
               setJoinOpen(false);
               setJoinErr('');
               setJoinNick('');
+              if (!me) {
+                window.location.href = '/';
+                return;
+              }
               window.history.replaceState({}, '', `/room/${roomId}`);
             }}
             disabled={joinLoading}
             className="flex-1"
           >
-            取消
+            {me ? '取消' : '回首页'}
           </Button>
           <Button
             variant="primary"
@@ -306,18 +321,35 @@ function RoomPageInner() {
             disabled={joinLoading || !joinNick.trim()}
             className="flex-1"
           >
-            {joinLoading ? '加入中…' : '加入'}
+            {joinLoading ? '进入中…' : gameStarted ? '重新进入' : '加入'}
           </Button>
         </div>
       </div>
     </div>
   ) : null;
 
-  if (!data || !me) {
+  if (!data) {
+    return (
+      <div className="mx-auto max-w-2xl p-12 text-center text-gray-500">
+        加载中…
+      </div>
+    );
+  }
+
+  if (!me) {
     return (
       <>
-        <div className="mx-auto max-w-2xl p-12 text-center text-gray-500">
-          {joinFlag ? '准备加入房间…' : '加载中…'}
+        <div className="relative z-10 mx-auto min-h-dvh max-w-2xl px-4 pt-[max(2rem,env(safe-area-inset-top))] text-center text-white/70">
+          <IrisPetalPageBackground />
+          <WeChatOpenTip />
+          <div className="relative z-10 pt-16">
+            <p className="text-lg text-white/80">房间 {roomId}</p>
+            <p className="mt-2 text-sm text-white/50">
+              {gameStarted
+                ? '请用原来的昵称重新进入'
+                : '请输入昵称加入房间'}
+            </p>
+          </div>
         </div>
         {joinDialog}
       </>
