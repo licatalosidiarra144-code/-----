@@ -14,7 +14,7 @@
 ## 玩法约定（2026-08）
 
 - 只留**技能卡**，无装备卡 / 无使用次数
-- 局型：`silver` 30% / `prismatic` 40% / `gold` 30%，严格分池
+- 局型：`silver` 20% / `prismatic` 50% / `gold` 30%，严格分池
 - 流程：`waiting → skill_picking → playing`
 - 抽选：4 选 1，每人每局可 `skill-reroll` **1 次**（允许与上一轮重复）
 - 卡库：`data/cards.json`（按《抽牌规则》导入，后台可改）

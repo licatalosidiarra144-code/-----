@@ -46,9 +46,9 @@ export function getCardsByMode(mode: GameMode, type?: CardType): Card[] {
   );
 }
 
-/** 白银 30% / 棱彩 40% / 黄金 30% */
+/** 白银 20% / 棱彩 50% / 黄金 30% */
 export function pickGameMode(rand: number = Math.random()): GameMode {
-  if (rand < 0.3) return 'silver';
+  if (rand < 0.2) return 'silver';
   if (rand < 0.7) return 'prismatic';
   return 'gold';
 }

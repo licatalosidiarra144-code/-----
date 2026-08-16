@@ -92,7 +92,7 @@ export default function HomePage() {
             4 人一桌 · 只抽技能卡
             <br />
             <span className="text-sm text-white/55">
-              白银 30% · 棱彩 40% · 黄金 30%
+              白银 20% · 棱彩 50% · 黄金 30%
             </span>
           </p>
         </div>

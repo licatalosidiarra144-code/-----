@@ -493,7 +493,7 @@ function RoomPageInner() {
                 等齐 4 人后，房主点这里开始
               </p>
               <p className="mb-5 text-sm text-white/55 sm:mb-6">
-                系统按概率抽局型：白银 30% / 棱彩 40% / 黄金 30%
+                系统按概率抽局型：白银 20% / 棱彩 50% / 黄金 30%
               </p>
               <Button
                 onClick={startGame}
