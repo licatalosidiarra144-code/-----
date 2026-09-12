@@ -6,7 +6,7 @@
 // - Web：靠 HttpOnly Cookie `mj_room`，所有写操作走 getPlayerSession()
 // - 小程序：浏览器不在，Cookie 不一定带上来；改走 Header：
 //     X-Player-Id: <数字>
-//     X-Room-Code: <6 位房间码>
+//     X-Room-Code: <3 位房间码>
 //
 // 这个函数优先读 Header；读不到再回退到 Cookie。
 // 不修改 lib/session.ts，保证 Web 行为 100% 不变。

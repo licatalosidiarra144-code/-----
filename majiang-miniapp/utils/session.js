@@ -2,7 +2,7 @@
 // 把当前会话写到 wx.storage
 //
 // 字段：
-//   roomCode   当前房间码（6 位）
+//   roomCode   当前房间码（3 位数字）
 //   playerId   玩家 DB 主键
 //   nickname   昵称
 //   isOwner    是否房主

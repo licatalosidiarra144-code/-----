@@ -23,7 +23,7 @@ export const rooms = pgTable(
   'rooms',
   {
     id: serial('id').primaryKey(),
-    // 6 位房间码，例如 "A3F7K2"，用户扫码或输入进房
+    // 3 位房间码，例如 "168"，用户输入进房
     code: varchar('code', { length: 8 }).notNull().unique(),
     // 房主 user_id（创建房间的人）
     ownerId: varchar('owner_id', { length: 64 }).notNull(),

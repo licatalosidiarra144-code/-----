@@ -1,7 +1,7 @@
 // utils/request.js
 // 封装 wx.request：自动注入 baseURL + 鉴权 Header + 错误处理
 
-const BASE = 'https://entrance-vault-tried-yen.trycloudflare.com';
+const BASE = 'https://lonely-macintosh-increase-trips.trycloudflare.com';
 
 function getSession() {
   try {

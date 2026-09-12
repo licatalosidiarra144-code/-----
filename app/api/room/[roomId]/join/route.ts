@@ -13,7 +13,7 @@ export async function POST(
     const { roomId: roomCode } = await params;
     const { nickname } = await request.json();
 
-    const room = await rooms.findByCode(roomCode);
+    const room = await rooms.findByCode(String(roomCode).toUpperCase());
     if (!room) {
       return NextResponse.json({ error: '房间不存在' }, { status: 404 });
     }

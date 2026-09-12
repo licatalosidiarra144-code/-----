@@ -50,7 +50,7 @@ Page({
     const ok =
       nickname.trim().length > 0 &&
       nickname.length <= 32 &&
-      (tab === 'create' || (roomCode.length >= 4 && roomCode.length <= 8));
+      (tab === 'create' || /^\d{3}$/.test(roomCode.trim()));
     this.setData({ canSubmit: ok });
   },
 

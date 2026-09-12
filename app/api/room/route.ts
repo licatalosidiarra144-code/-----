@@ -16,7 +16,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const code = await generateUniqueRoomCode();
+    let code: string;
+    try {
+      code = await generateUniqueRoomCode();
+    } catch {
+      return NextResponse.json({ error: '房间码已用尽，请稍后再试' }, { status: 503 });
+    }
     const ownerId = nanoid(12);
 
     const room = await rooms.create({

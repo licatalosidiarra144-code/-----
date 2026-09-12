@@ -25,8 +25,8 @@
 
   <block wx:if="{{tab==='join'}}">
     <view class="card col">
-      <view class="text-bright" style="font-size:30rpx;">房间码（6 位）</view>
-      <input class="input" placeholder="例：A3F7K2" maxlength="8" value="{{roomCode}}" bindinput="onRoomCode" />
+      <view class="text-bright" style="font-size:30rpx;">房间码（3 位）</view>
+      <input class="input" placeholder="例：168" maxlength="3" type="number" value="{{roomCode}}" bindinput="onRoomCode" />
     </view>
     <view class="spacer-md"></view>
   </block>

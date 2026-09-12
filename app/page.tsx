@@ -153,12 +153,12 @@ export default function HomePage() {
                 <Input
                   value={roomCode}
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                  placeholder="6 位字母数字"
-                  maxLength={6}
+                  placeholder="3 位数字"
+                  maxLength={3}
                   autoCapitalize="characters"
                   autoCorrect="off"
                   spellCheck={false}
-                  inputMode="text"
+                  inputMode="numeric"
                   enterKeyHint="go"
                   className="border-white/20 bg-white/5 font-mono text-lg tracking-[0.35em] text-white placeholder-white/30 focus:border-cyan-400 focus:ring-cyan-400/30"
                 />

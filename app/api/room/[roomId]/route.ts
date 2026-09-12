@@ -12,12 +12,7 @@ export async function GET(
   try {
     const { roomId: roomCode } = await params;
 
-    let room;
-    if (/^\d+$/.test(roomCode)) {
-      room = await rooms.findById(parseInt(roomCode));
-    } else {
-      room = await rooms.findByCode(roomCode);
-    }
+    const room = await rooms.findByCode(roomCode.toUpperCase());
     if (!room) {
       return NextResponse.json({ error: '房间不存在' }, { status: 404 });
     }
